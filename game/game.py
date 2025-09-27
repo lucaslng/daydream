@@ -30,9 +30,10 @@ async def game() -> Screens:
 		for event in pg.event.get():
 			if event.type == pg.QUIT:
 				raise SystemExit
+			if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+				return Screens.MENU
 			
 		input_system.update(entities, dt)
-
 		movement_system.update(entities, dt)
 
 		SURF.fill((255, 0, 0))

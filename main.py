@@ -10,7 +10,6 @@ async def main():
   initialize()
   screen = Screens.MENU
   while True:
-    await asyncio.sleep(0)
     match screen:
       case Screens.MENU:
         screen = await menu()
