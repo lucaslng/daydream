@@ -14,4 +14,5 @@ class RenderSystem(System):
 				pos: Position = entity.get_component(Position) # type: ignore
 				angle: float = entity.get_component(Rotation).angle # type: ignore
 				person_sprite: PersonSprite = entity.get_component(PersonSprite) # type: ignore
-				SURF.blit(pg.transform.rotate(person_sprite.body_sprite.get(), -angle), (pos.x, pos.y))
+				rotated = pg.transform.rotate(person_sprite.body_sprite.get(), -angle) # type: ignore
+				SURF.blit(rotated, rotated.get_rect(center=SURF.get_rect().center))
