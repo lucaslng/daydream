@@ -19,7 +19,6 @@ class InputSystem(System):
                 vel.vx, vel.vy = 0, 0  # reset each frame
 
                 if keys[pg.K_LEFT] or keys[pg.K_a]:
-                    print("hi")
                     vel.vx = -speed
                 if keys[pg.K_RIGHT] or keys[pg.K_d]:
                     vel.vx = speed

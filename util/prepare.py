@@ -2,7 +2,7 @@ import pygame as pg
 
 
 FPS = 60
-WINDOW = (320, 240)
+WINDOW = (800, 600)
 CLOCK = pg.time.Clock()
 SURF = pg.display.set_mode(WINDOW)
 

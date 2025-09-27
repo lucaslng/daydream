@@ -1,8 +1,8 @@
 import asyncio
 
 from menu.menu import menu
-from game.game import game
 from util.prepare import initialize
+from game.game import game
 from util.screens import Screens
 
 
