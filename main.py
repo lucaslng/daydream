@@ -1,5 +1,4 @@
 import asyncio
-import pygame
 
 from menu.menu import menu
 from game.game import game
@@ -13,9 +12,9 @@ async def main():
   while True:
     match screen:
       case Screens.MENU:
-        state = await menu()
+        screen = await menu()
       case Screens.GAME:
-        state = await game()
+        screen = await game()
 
 
 asyncio.run(main())
