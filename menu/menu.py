@@ -1,65 +1,67 @@
 import pygame
-import pygame_gui
+import os
 from util.screens import Screens
 from util.prepare import SURF, WINDOW #, clock
 from .theme import gametheme
 from .background import loadthebackround, blackoverlay as create_overlay 
 from util.update_screen import update_screen
 from .elements import button_configs, label_configs as get_label_config
-from util.prepare import FPS
+
+def draw_shadow_text(screen, font, text, x, y, color=(255,255,255)):
+    shadow = font.render(text, True, (0,0,0))
+    main = font.render(text, True, color)
+    screen.blit(shadow, (x+2, y+2))
+    screen.blit(main, (x, y))
+
+def draw_button(screen, rect, text, font, color, is_hovered):
+    if is_hovered:
+        color = (255, 215, 0)
+    
+    text_surf = font.render(text, True, color)
+    text_rect = text_surf.get_rect()
+    text_rect.center = rect.center
+    
+    shadow = font.render(text, True, (0,0,0))
+    screen.blit(shadow, (text_rect.x+2, text_rect.y+2))
+    screen.blit(text_surf, text_rect)
 
 async def menu() -> Screens:
-    manager = pygame_gui.UIManager(WINDOW, gametheme())
     background = loadthebackround()
     button_config = button_configs()
     label_config = get_label_config()
     
-    title_text = pygame_gui.elements.UILabel(
-        relative_rect=pygame.Rect(*label_config["title"]["rect"]),
-        text=label_config["title"]["text"],
-        manager=manager
-    )
+    try:
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        font_path = os.path.join(script_dir, "resources", "fonts", "LowresPixel-Regular.otf")
+        title_font = pygame.font.Font(font_path, 28)
+        button_font = pygame.font.Font(font_path, 22)
+    except:
+        title_font = pygame.font.SysFont("arial", 28, bold=True)
+        button_font = pygame.font.SysFont("arial", 22, bold=True)
     
-    subtitle_text = pygame_gui.elements.UILabel(
-        relative_rect=pygame.Rect(*label_config["subtitle"]["rect"]),
-        text=label_config["subtitle"]["text"],
-        manager=manager
-    )
-    
-    play_button = pygame_gui.elements.UIButton(
-        relative_rect=pygame.Rect(*button_config["play"]["rect"]),
-        text=button_config["play"]["text"],
-        manager=manager
-    )
-    
-    settings_button = pygame_gui.elements.UIButton(
-        relative_rect=pygame.Rect(*button_config["settings"]["rect"]),
-        text=button_config["settings"]["text"],
-        manager=manager
-    )
-    
-    quit_button = pygame_gui.elements.UIButton(
-        relative_rect=pygame.Rect(*button_config["quit"]["rect"]),
-        text=button_config["quit"]["text"],
-        manager=manager
-    )
+    play_rect = pygame.Rect(*button_config["play"]["rect"])
+    settings_rect = pygame.Rect(*button_config["settings"]["rect"])
+    quit_rect = pygame.Rect(*button_config["quit"]["rect"])
     
     while True:
-        time_delta = 1/FPS
+        mouse_pos = pygame.mouse.get_pos()
+        
+        play_hovered = play_rect.collidepoint(mouse_pos)
+        settings_hovered = settings_rect.collidepoint(mouse_pos)
+        quit_hovered = quit_rect.collidepoint(mouse_pos)
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return Screens.MENU
             
-            if event.type == pygame_gui.UI_BUTTON_PRESSED:
-                if event.ui_element == play_button:
-                    return Screens.GAME
-                elif event.ui_element == settings_button:
-                    pass
-                elif event.ui_element == quit_button:
-                    raise SystemExit
-            
-            manager.process_events(event)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    if play_hovered:
+                        return Screens.GAME
+                    elif settings_hovered:
+                        pass
+                    elif quit_hovered:
+                        raise SystemExit
         
         manager.update(time_delta)
         
