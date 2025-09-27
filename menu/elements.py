@@ -1,5 +1,10 @@
 from util.prepare import WINDOW
 
+<<<<<<< Updated upstream
+=======
+def get_pixel_font_path():
+    return "menu/elements/lower-pixel/LowresPixel-Regular.otf"
+>>>>>>> Stashed changes
 
 def button_configs():
     button_width = 160
