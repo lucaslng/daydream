@@ -1,18 +1,21 @@
 import asyncio
 import pygame
 
-from util.prepare import FPS
-
-pygame.init()
-pygame.display.set_mode((320, 240))
-clock = pygame.time.Clock()
+from menu.menu import menu
+from game.game import game
+from util.prepare import initialize
+from util.screens import Screens
 
 
 async def main():
-    while True:
-        
-        pygame.display.update()
-        await asyncio.sleep(0)  # You must include this statement in your main loop. Keep the argument at 0.
-        clock.tick(FPS)
+  initialize()
+  screen = Screens.MENU
+  while True:
+    match screen:
+      case Screens.MENU:
+        state = await menu()
+      case Screens.GAME:
+        state = await game()
+
 
 asyncio.run(main())
