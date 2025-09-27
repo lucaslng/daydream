@@ -18,8 +18,11 @@ from util.update_screen import update_screen
 async def game() -> Screens:
 	print("started game!")
 	player = Entity()
-	player.add_components(Position(100, 100), Velocity(0, 0), Speed(50), PersonSprite(Sprite("player_bodies", "a")), PlayerComponent(), Collider(15, 15), Rotation())
-	entities = [player]
+	player.add_components(Position(0, 0), Velocity(0, 0), Speed(500), PersonSprite(Sprite("player_bodies", "a")), PlayerComponent(), Collider(128, 128), Rotation())
+
+	enemy = Entity()
+	enemy.add_components(Position(300, 100), Velocity(0, 0), Speed(50), PersonSprite(Sprite("player_bodies", "b")), PlayerComponent(), Collider(128, 128), Rotation(20))
+	entities = [player, enemy]
 	input_system = InputSystem()
 	movement_system = MovementSystem()
 	render_system = RenderSystem()
