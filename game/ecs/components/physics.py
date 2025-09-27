@@ -12,5 +12,5 @@ class Velocity(Component):
 		self.vy = vy
 
 class Rotation(Component):
-	def __init__(self, direction):
-		self.direction = direction
+	def __init__(self, angle: float = 0):
+		self.angle = angle

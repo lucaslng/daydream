@@ -3,7 +3,7 @@ from game.ecs.components.physics import Position, Velocity
 
 
 class MovementSystem(System):
-    def update(self, entities, dt):
+    def update(self, entities, player, dt):
         for entity in entities:
             if entity.has_components(Position, Velocity):
                 pos = entity.get_component(Position)

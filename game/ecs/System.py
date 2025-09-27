@@ -8,5 +8,5 @@ class System(Protocol):
 
 	# def __init__(self): pass
 
-	def update(self, entities: list[Entity], dt: float): ...
+	def update(self, entities: list[Entity], player: Entity, dt: float): ...
 	
