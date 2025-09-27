@@ -57,7 +57,7 @@ async def menu() -> Screens:
                 elif event.ui_element == settings_button:
                     pass
                 elif event.ui_element == quit_button:
-                    return Screens.MENU
+                    raise SystemExit
             
             manager.process_events(event)
         
@@ -68,4 +68,4 @@ async def menu() -> Screens:
         overlay = create_overlay()
         screen.blit(overlay, (0, 0))
         manager.draw_ui(screen)
-        update_screen()
+        await update_screen()

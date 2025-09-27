@@ -1,22 +1,17 @@
 import pygame
+import os
 from util.prepare import WINDOW
 
-<<<<<<< Updated upstream
-def loadthebackround():
-    try:
-        background = pygame.image.load("menu/resources/main-backround.png") # tbd to change path
-        background = pygame.transform.scale(background, WINDOW)
-        return background
-    except pygame.error: #fallback to black screen
-=======
 
 def loadthebackround():
     try:
-        background = pygame.image.load("menu/elements/menubackround.png")
+        # Get the directory of this script and construct the path
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        background_path = os.path.join(script_dir, "elements", "menubackround.png")
+        background = pygame.image.load(background_path)
         background = pygame.transform.scale(background, WINDOW)
         return background
     except pygame.error: # fallback to a black screen
->>>>>>> Stashed changes
         background = pygame.Surface(WINDOW)
         background.fill((0, 0, 0))
         return background

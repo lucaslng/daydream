@@ -1,19 +1,10 @@
-<<<<<<< Updated upstream
-def gamethemes():
-    return {
-        "@button": {
-            "colours": {
-                "normal_bg": "#8B0000",
-                "hovered_bg": "#B22222",
-                "active_bg": "#DC143C",
-                "normal_border": "#FF0000",
-                "hovered_border": "#FF4500",
-                "active_border": "#FF6347",
-                "normal_text": "#FFFFFF",
-                "hovered_text": "#FFFFFF",
-                "active_text": "#FFFFFF"
-=======
+import os
+
 def gametheme():
+    # Get the directory of this script and construct the font path
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    font_path = os.path.join(script_dir, "resources", "fonts", "LowresPixel-Regular.otf")
+    
     return {
         "@button": {
             "colours": {
@@ -26,7 +17,6 @@ def gametheme():
                 "normal_text": "#FFFFFF",   
                 "hovered_text": "#FFFFFF",   
                 "active_text": "#FFFFFF"     
->>>>>>> Stashed changes
             },
             "font": {
                 "name": "freesansbold.ttf",
@@ -39,24 +29,13 @@ def gametheme():
         },
         "@label": {
             "colours": {
-<<<<<<< Updated upstream
-                "normal_text": "#FF0000",
-                "normal_bg": "#000000"
-            },
-            "font": {
-                "name": "menu/resources/fonts/LowresPixel-Regular.otf",
-                "size": 21, 
-                "bold": True  
-}
-=======
                 "normal_text": "#FF0000",    
                 "normal_bg": "#000000"      
             },
             "font": {
-                "name": "freesansbold.ttf",
-                "size": 24,
-                "bold": True
-            }
->>>>>>> Stashed changes
+                "name": font_path,
+                "size": 21, 
+                "bold": True  
+}
         }
     }
