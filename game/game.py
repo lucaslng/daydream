@@ -22,7 +22,7 @@ async def game() -> Screens:
 	entities = [player]
 	input_system = InputSystem()
 	movement_system = MovementSystem()
-	render_system = RenderSystem(SURF)
+	render_system = RenderSystem()
 	
 	while True:
 		dt = CLOCK.tick(60) / 1000.0

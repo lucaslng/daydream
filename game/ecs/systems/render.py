@@ -7,8 +7,6 @@ from util.prepare import SURF
 
 
 class RenderSystem(System):
-	def __init__(self, surf: pg.Surface):
-		self.surf = surf
 
 	def update(self, entities, dt):
 		for entity in entities:
