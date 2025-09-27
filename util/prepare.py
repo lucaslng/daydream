@@ -4,11 +4,11 @@ import pygame as pg
 FPS = 60
 WINDOW = (320, 240)
 CLOCK = pg.time.Clock()
+SURF = pg.display.set_mode(WINDOW)
 
 def initialize():
 	'''initialize program'''
 	pg.init()
-	pg.display.set_mode(WINDOW)
 	pg.event.set_allowed([pg.QUIT, pg.KEYDOWN, pg.MOUSEBUTTONDOWN, pg.MOUSEBUTTONUP])
 	pg.font.init()
 	# pg.mixer.init()

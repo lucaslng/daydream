@@ -17,3 +17,6 @@ class Entity():
 	
 	def has_component(self, component_type: type[Component]) -> bool:
 		return component_type in self.components
+	
+	def has_components(self, *component_types: type[Component]) -> bool:
+		return all([component_type in self.components for component_type in component_types])
