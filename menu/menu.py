@@ -1,7 +1,7 @@
 import pygame
 import pygame_gui
 from util.screens import Screens
-from util.prepare import WINDOW #, clock
+from util.prepare import SURF, WINDOW #, clock
 from .theme import gametheme
 from .background import loadthebackround, blackoverlay as create_overlay 
 from util.update_screen import update_screen
@@ -63,9 +63,8 @@ async def menu() -> Screens:
         
         manager.update(time_delta)
         
-        screen = pygame.display.get_surface()
-        screen.blit(background, (0, 0))
+        SURF.blit(background, (0, 0))
         overlay = create_overlay()
-        screen.blit(overlay, (0, 0))
-        manager.draw_ui(screen)
+        SURF.blit(overlay, (0, 0))
+        manager.draw_ui(SURF)
         await update_screen()
