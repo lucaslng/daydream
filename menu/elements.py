@@ -29,7 +29,7 @@ def label_configs():
     return {
         "title": {
             "rect": (center_x - 80, 30, 160, 50),
-            "text": "TBD No TITLE RN"
+            "text": "Title Here"
         },
         "subtitle": {
             "rect": (center_x - 140, 70, 280, 30),

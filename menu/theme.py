@@ -1,41 +1,35 @@
-import os
-
 def gametheme():
-    # Get the directory of this script and construct the font path
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    font_path = os.path.join(script_dir, "resources", "fonts", "LowresPixel-Regular.otf")
-    
     return {
         "@button": {
             "colours": {
-                "normal_bg": "#8B0000",      
-                "hovered_bg": "#B22222",     
-                "active_bg": "#DC143C",      
-                "normal_border": "#FF0000",  
-                "hovered_border": "#FF4500", 
-                "active_border": "#FF6347",  
-                "normal_text": "#FFFFFF",   
-                "hovered_text": "#FFFFFF",   
-                "active_text": "#FFFFFF"     
+                "normal_bg": None,
+                "hovered_bg": None,
+                "active_bg": None,
+                "normal_border": None,
+                "hovered_border": None,
+                "active_border": None,
+                "normal_text": "#A92837",
+                "hovered_text": "#D5BE3E",
+                "active_text": "#C512AD"
             },
             "font": {
                 "name": "freesansbold.ttf",
-                "size": 16,
+                "size": 20,
                 "bold": True
             },
-            "shape": "rounded_rectangle",
-            "shape_corner_radius": 5,
-            "border_width": 2
+            "shape": "rectangle",
+            "shape_corner_radius": 0,
+            "border_width": 0
         },
         "@label": {
             "colours": {
-                "normal_text": "#FF0000",    
-                "normal_bg": "#000000"      
+                "normal_text": "#D41C1C",
+                "normal_bg": None
             },
             "font": {
-                "name": font_path,
-                "size": 21, 
+                "name": "freesansbold.ttf",
+                "size": 24, 
                 "bold": True  
-}
+            }
         }
     }
