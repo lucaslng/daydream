@@ -16,11 +16,7 @@ from util.update_screen import update_screen
 async def game() -> Screens:
 	print("started game!")
 	player = Entity()
-	player.add_component(Position(100, 100))
-	player.add_component(Velocity(0, 0))
-	player.add_component(Speed(50))
-	player.add_component(Circle(15, (0, 255, 0)))
-	player.add_component(InputComponent())
+	player.add_components(Position(100, 100), Velocity(0, 0), Speed(50), Circle(15, (0, 255, 0)), InputComponent())
 	entities = [player]
 	input_system = InputSystem()
 	movement_system = MovementSystem()
