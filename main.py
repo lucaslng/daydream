@@ -6,6 +6,7 @@ from game.game import game
 from util.screens import Screens
 
 
+
 async def main():
   initialize()
   screen = Screens.MENU

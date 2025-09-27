@@ -1,7 +1,7 @@
 import pygame
 import os
 from util.screens import Screens
-from util.prepare import SURF, WINDOW #, clock
+from util.prepare import SURF, WINDOW
 from .theme import gametheme
 from .background import loadthebackround, blackoverlay as create_overlay 
 from util.update_screen import update_screen
@@ -63,10 +63,19 @@ async def menu() -> Screens:
                     elif quit_hovered:
                         raise SystemExit
         
-        manager.update(time_delta)
-        
         SURF.blit(background, (0, 0))
         overlay = create_overlay()
         SURF.blit(overlay, (0, 0))
-        manager.draw_ui(SURF)
+        
+        # Draw title and subtitle
+        title_rect = pygame.Rect(*label_config["title"]["rect"])
+        subtitle_rect = pygame.Rect(*label_config["subtitle"]["rect"])
+        draw_shadow_text(SURF, title_font, label_config["title"]["text"], title_rect.x, title_rect.y)
+        draw_shadow_text(SURF, button_font, label_config["subtitle"]["text"], subtitle_rect.x, subtitle_rect.y)
+        
+        # Draw buttons
+        draw_button(SURF, play_rect, button_config["play"]["text"], button_font, (255, 255, 255), play_hovered)
+        draw_button(SURF, settings_rect, button_config["settings"]["text"], button_font, (255, 255, 255), settings_hovered)
+        draw_button(SURF, quit_rect, button_config["quit"]["text"], button_font, (255, 255, 255), quit_hovered)
+        
         await update_screen()
