@@ -1,21 +1,6 @@
 import pygame
 import pygame_gui
 from util.screens import Screens
-<<<<<<< Updated upstream
-# from menu.menu import menu
-from util.prepare import WINDOW #, CLOCK
-from .theme import gamethemes
-from .background import loadthebackround, blackoverlay
-from util.update_screen import update_screen
-from .elements import button_configs, label_configs
-from util.prepare import FPS
-
-async def menu() -> Screens:
-    manager = pygame_gui.UIManager(WINDOW, gamethemes())
-    background = loadthebackround()
-    button_config = button_configs()
-    label_config = label_configs()
-=======
 from util.prepare import WINDOW #, clock
 from .theme import gametheme
 from .background import loadthebackround, blackoverlay as create_overlay 
@@ -28,7 +13,6 @@ async def menu() -> Screens:
     background = loadthebackround()
     button_config = button_configs()
     label_config = get_label_config()
->>>>>>> Stashed changes
     
     title_text = pygame_gui.elements.UILabel(
         relative_rect=pygame.Rect(*label_config["title"]["rect"]),
@@ -61,11 +45,7 @@ async def menu() -> Screens:
     )
     
     while True:
-<<<<<<< Updated upstream
-        time_delta = await update_screen()
-=======
         time_delta = 1/FPS
->>>>>>> Stashed changes
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -77,11 +57,7 @@ async def menu() -> Screens:
                 elif event.ui_element == settings_button:
                     pass
                 elif event.ui_element == quit_button:
-<<<<<<< Updated upstream
-                    raise SystemExit
-=======
                     return Screens.MENU
->>>>>>> Stashed changes
             
             manager.process_events(event)
         
@@ -89,13 +65,7 @@ async def menu() -> Screens:
         
         screen = pygame.display.get_surface()
         screen.blit(background, (0, 0))
-<<<<<<< Updated upstream
-        overlay = blackoverlay()
-        screen.blit(overlay, (0, 0))
-        manager.draw_ui(screen)
-=======
         overlay = create_overlay()
         screen.blit(overlay, (0, 0))
         manager.draw_ui(screen)
         update_screen()
->>>>>>> Stashed changes
