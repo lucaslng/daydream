@@ -4,7 +4,7 @@ from game.sprites.spritesheet import SpriteSheet
 
 class Sprite():
 	SPRITESHEETS: dict[str, SpriteSheet] = {
-	"player_bodies": SpriteSheet("spritesheet.png", {"a": (0, 0, 32, 32)})
+	"player_bodies": SpriteSheet("spritesheet.png", {"a": (0, 0, 32, 32)}, 4)
 }
 	
 	def __init__(self, spritesheet: str, sprite_name: str):
