@@ -14,7 +14,7 @@ class BulletSystem():
 		for entity in entities:
 			if entity.has_components(PersonSprite, Collider, Position) and (not entity.has_component(Death) or (entity.has_component(Death) and not entity.get_component(Death).death)):
 				for bullet in entities:
-					if bullet.has_components(Bullet, Collider, Position):
+					if bullet.has_components(Bullet, Collider, Position) and bullet.get_component(Bullet).shooter_id != entity.id:
 						entity_collider: Collider = entity.get_component(Collider) # type: ignore
 						entity_pos: Position = entity.get_component(Position) # type: ignore
 						bullet_collider: Collider = bullet.get_component(Collider) # type: ignore

@@ -16,6 +16,7 @@ class RenderSystem():
     death_animation_filename = "death_animation"
     self._death_sprites = (Sprite(death_animation_filename, "0"), Sprite(death_animation_filename, "1"), Sprite(
       death_animation_filename, "2"), Sprite(death_animation_filename, "3"), Sprite(death_animation_filename, "4"), Sprite(death_animation_filename, "5"))
+    self._bullet_sprite = pg.transform.scale_by(Sprite("weapons", "bullet").get(), 0.75)
 
   def update(self, entities: set[Entity], player: Entity, map: pg.Surface):
     # draw player
@@ -32,20 +33,19 @@ class RenderSystem():
           angle: float = entity.get_component(Rotation).angle  # type: ignore
           person_sprite: PersonSprite = entity.get_component(
             PersonSprite)  # type: ignore
-					sprite_surface = person_sprite.body_sprite.get()
-					
-					#bullet scaled down might change lata
-					if entity.has_component(Bullet):
-						sprite_surface = pg.transform.scale(sprite_surface, 
-							(int(sprite_surface.get_width() * 0.75), int(sprite_surface.get_height() * 0.75)))
-					
+          sprite_surface = person_sprite.body_sprite.get() # type: ignore
           rotated = pg.transform.rotate(
             sprite_surface, -angle)  # type: ignore
           SURF.blit(rotated, rotated.get_rect(center=new_pos))
-          if entity.has_component(Death) and entity.get_component(Death).death:
-            frame = entity.get_component(Death).frame // 2
+          if entity.has_component(Death) and entity.get_component(Death).death: # type: ignore
+            frame = entity.get_component(Death).frame // 2 # type: ignore
             death_sprite = self._death_sprites[frame].get()
             SURF.blit(death_sprite, death_sprite.get_rect(center=new_pos))
+        #bullet scaled down might change lata
+        if entity.has_component(Bullet):
+          print("hi")
+          SURF.blit(self._bullet_sprite, new_pos)
+          pg.draw.circle(SURF, (255,0,0), new_pos, 20)
         if entity.has_component(Circle):
           circle: Circle = entity.get_component(Circle)  # type: ignore
           pg.draw.circle(SURF, circle.color, new_pos, circle.size)

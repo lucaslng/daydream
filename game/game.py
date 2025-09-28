@@ -35,10 +35,7 @@ async def game() -> Screens:
 	# enemy = Entity()
 	# enemy.add_components(Position(500, 400), Velocity(0, 0), Speed(300), PersonSprite(Sprite("player_bodies", "b")), AStarComponent(), Collider(128, 128), Rotation(20), Movement())
 
-	bullet = Entity()
-	bullet.add_components(Position(500, 700), Velocity(0, 0), Circle(30, (0, 255, 0)), Collider(15, 15), Bullet())
-
-	entities = {player, bullet}
+	entities = {player}
 	input_system = InputSystem()
 	# enemy_ai_system = AStarSystem()
 	movement_system = MovementSystem(pg.image.load("game/resources/levelmaps/levelmap_1.png").convert())
@@ -63,16 +60,11 @@ async def game() -> Screens:
 			# 	return Screens.GAMEOVER
 			# if event.type == pg.KEYDOWN and event.key == pg.K_o:
 			# 	return Screens.LEVELCLEAR
-			if event.type == pg.KEYDOWN and event.key == pg.K_f:
+			if (event.type == pg.KEYDOWN and event.key == pg.K_f) or (event.type == pg.MOUSEBUTTONDOWN and event.button == 1):
+				print("hi")
 				player_pos = player.get_component(Position)
 				player_rotation = player.get_component(Rotation)
-				new_bullet = shooting_system.create_bullet(player_pos, player_rotation)
-				entities.append(new_bullet)
-			if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
-				player_pos = player.get_component(Position)
-				player_rotation = player.get_component(Rotation)
-				new_bullet = shooting_system.create_bullet(player_pos, player_rotation)
-				entities.append(new_bullet)
+				entities.add(shooting_system.create_bullet(player_pos, player_rotation, player.id)) # type: ignore
 			# return Screens.INGAMEMENU
 
 		dash_system.update(entities, dt)
