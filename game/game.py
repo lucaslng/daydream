@@ -2,7 +2,6 @@ import pygame as pg
 
 from game.ecs.components.dash import Dash
 from game.ecs.components.death import Death
-from game.ecs.components.death import Death
 from game.ecs.components.enemy import Enemy
 from game.ecs.entity import Entity
 from game.ecs.components.collider import Collider
