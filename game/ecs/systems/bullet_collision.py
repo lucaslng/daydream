@@ -14,7 +14,6 @@ class BulletCollisionSystem:
 	def update(self, entities: set[Entity], level: int) -> set[Entity]:
 		bullets_to_remove: set[Entity] = set()
 		
-		# Check bullet collision with walls
 		for bullet in entities:
 			if bullet.has_components(Bullet, Collider, Position):
 				bullet_collider: Collider = bullet.get_component(Collider)

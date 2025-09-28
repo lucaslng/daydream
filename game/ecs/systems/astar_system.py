@@ -8,12 +8,6 @@ from game.ecs.components.physics import Position, Rotation, Velocity
 
 
 def astar(grid: list[list[bool]], start: tuple[int, int], goal: tuple[int, int]):
-  """
-  grid: 2D list (0 = wall, 1 = walkable)
-  start: (x, y) in grid coords
-  goal: (x, y) in grid coords
-  """
-  # print(start, goal)
   rows, cols = len(grid), len(grid[0])
   open_set = []
   heapq.heappush(open_set, (0, start))
@@ -41,7 +35,7 @@ def astar(grid: list[list[bool]], start: tuple[int, int], goal: tuple[int, int])
       nx, ny = cx + dx, cy + dy
       neighbor = (nx, ny)
       if 0 <= nx < cols and 0 <= ny < rows:
-        if grid[ny][nx] == 0:  # wall
+        if grid[ny][nx] == 0:
           continue
         tentative_g = g_score[current] + 1
         if tentative_g < g_score.get(neighbor, float("inf")):
@@ -50,7 +44,7 @@ def astar(grid: list[list[bool]], start: tuple[int, int], goal: tuple[int, int])
           f_score = tentative_g + h(neighbor, goal)
           heapq.heappush(open_set, (f_score, neighbor))
 
-  return []  # no path
+  return []
 
 
 def lerp_angle(a, b, t):
@@ -72,14 +66,14 @@ class AStarSystem():
     if (self._repath_timer > AStarSystem.REPATH_TIME):
       self._repath_timer = 0.0
       repath = True
-    player_pos: Position = player.get_component(Position)  # type: ignore
+    player_pos: Position = player.get_component(Position)
     for entity in entities:
       if entity.has_components(AStarComponent, Position, Velocity, Speed, Rotation):
-        enemy_pos: Position = entity.get_component(Position)  # type: ignore
-        vel: Velocity = entity.get_component(Velocity)  # type: ignore
+        enemy_pos: Position = entity.get_component(Position)
+        vel: Velocity = entity.get_component(Velocity)
         ai: AStarComponent = entity.get_component(
-          AStarComponent)  # type: ignore
-        speed: int = entity.get_component(Speed).speed  # type: ignore
+          AStarComponent)
+        speed: int = entity.get_component(Speed).speed
         if repath:
           ai.path = astar(grid, (int(enemy_pos.x // AStarSystem.TILE_SIZE), int(enemy_pos.y // AStarSystem.TILE_SIZE)),
                           (int(player_pos.x // AStarSystem.TILE_SIZE), int(player_pos.y // AStarSystem.TILE_SIZE)))
@@ -90,12 +84,11 @@ class AStarSystem():
           target_y = ty * AStarSystem.TILE_SIZE + AStarSystem.TILE_SIZE // 2
           dx = target_x - enemy_pos.x
           dy = target_y - enemy_pos.y
-          rotation: Rotation = entity.get_component(Rotation)  # type: ignore
+          rotation: Rotation = entity.get_component(Rotation)
           rotation.angle = lerp_angle(
             rotation.angle, degrees(atan2(dy, dx)) + 90, dt * 5)
           dist = (dx**2 + dy**2) ** 0.5
-          if dist > 2:  # move toward target tile
-            # print("moving", target_x, target_y, ai.target_index, len(ai.path))
+          if dist > 2:
             vel.vx = (dx / dist) * speed
             vel.vy = (dy / dist) * speed
           else:
