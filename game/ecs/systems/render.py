@@ -1,6 +1,7 @@
 import pygame as pg
 
 from game.ecs.components.circle import Circle
+from game.ecs.components.bullet import Bullet
 from game.ecs.components.death import Death
 from game.ecs.entity import Entity
 from game.ecs.components.physics import Position, Rotation
@@ -31,8 +32,15 @@ class RenderSystem():
           angle: float = entity.get_component(Rotation).angle  # type: ignore
           person_sprite: PersonSprite = entity.get_component(
             PersonSprite)  # type: ignore
+					sprite_surface = person_sprite.body_sprite.get()
+					
+					#bullet scaled down might change lata
+					if entity.has_component(Bullet):
+						sprite_surface = pg.transform.scale(sprite_surface, 
+							(int(sprite_surface.get_width() * 0.75), int(sprite_surface.get_height() * 0.75)))
+					
           rotated = pg.transform.rotate(
-            person_sprite.body_sprite.get(), -angle)  # type: ignore
+            sprite_surface, -angle)  # type: ignore
           SURF.blit(rotated, rotated.get_rect(center=new_pos))
           if entity.has_component(Death) and entity.get_component(Death).death:
             frame = entity.get_component(Death).frame // 2

@@ -19,6 +19,7 @@ from game.ecs.systems.deaths import DeathSystem
 from game.ecs.systems.input import InputSystem
 from game.ecs.systems.movement import MovementSystem
 from game.ecs.systems.render import RenderSystem
+from game.ecs.systems.shooting import ShootingSystem
 from game.sprites.sprite import Sprite
 from game.background import load_game_background, create_game_overlay
 from util.prepare import CLOCK, SURF
@@ -43,6 +44,7 @@ async def game() -> Screens:
 	movement_system = MovementSystem(pg.image.load("game/resources/levelmaps/levelmap_1.png").convert())
 	dash_system = DashSystem()
 	bullet_system = BulletSystem()
+	shooting_system = ShootingSystem()
 	death_system = DeathSystem()
 	render_system = RenderSystem()
 	
@@ -57,12 +59,20 @@ async def game() -> Screens:
 				raise SystemExit
 			if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
 				return Screens.MENU
-			if event.type == pg.KEYDOWN and event.key == pg.K_i:
-				return Screens.GAMEOVER
-			if event.type == pg.KEYDOWN and event.key == pg.K_o:
-				entities.add(enemy())
-				entities.add(enemy())
-				# return Screens.LEVELCLEAR
+			# if event.type == pg.KEYDOWN and event.key == pg.K_i:
+			# 	return Screens.GAMEOVER
+			# if event.type == pg.KEYDOWN and event.key == pg.K_o:
+			# 	return Screens.LEVELCLEAR
+			if event.type == pg.KEYDOWN and event.key == pg.K_f:
+				player_pos = player.get_component(Position)
+				player_rotation = player.get_component(Rotation)
+				new_bullet = shooting_system.create_bullet(player_pos, player_rotation)
+				entities.append(new_bullet)
+			if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
+				player_pos = player.get_component(Position)
+				player_rotation = player.get_component(Rotation)
+				new_bullet = shooting_system.create_bullet(player_pos, player_rotation)
+				entities.append(new_bullet)
 			# return Screens.INGAMEMENU
 
 		dash_system.update(entities, dt)
