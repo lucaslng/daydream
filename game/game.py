@@ -6,7 +6,7 @@ from game.ecs.entity import Entity
 from game.ecs.components.collider import Collider
 from game.ecs.components.player import PlayerComponent
 from game.ecs.components.person_sprite import PersonSprite
-from game.ecs.components.physics import Position, Rotation, Velocity
+from game.ecs.components.physics import Movement, Position, Rotation, Velocity
 from game.ecs.components.speed import Speed
 from game.ecs.systems.astar_system import AStarSystem
 from game.ecs.systems.dash import DashSystem
@@ -23,10 +23,10 @@ from util.update_screen import update_screen
 async def game() -> Screens:
 	print("started game!")
 	player = Entity()
-	player.add_components(Position(500, 500), Velocity(0, 0), Speed(500), PersonSprite(Sprite("player_bodies", "a")), PlayerComponent(), Collider(128, 128), Rotation(), Dash(3000))
+	player.add_components(Position(500, 500), Velocity(0, 0), Speed(500), PersonSprite(Sprite("player_bodies", "a")), PlayerComponent(), Collider(128, 128), Rotation(), Dash(400), Movement())
 
 	enemy = Entity()
-	enemy.add_components(Position(500, 400), Velocity(0, 0), Speed(300), PersonSprite(Sprite("player_bodies", "b")), AStarComponent(), Collider(128, 128), Rotation(20))
+	enemy.add_components(Position(500, 400), Velocity(0, 0), Speed(300), PersonSprite(Sprite("player_bodies", "b")), AStarComponent(), Collider(128, 128), Rotation(20), Movement())
 	entities = [player, enemy]
 	input_system = InputSystem()
 	# enemy_ai_system = AStarSystem()
@@ -50,7 +50,7 @@ async def game() -> Screens:
 			if event.type == pg.KEYDOWN and event.key == pg.K_o:
 				return Screens.LEVELCLEAR
 			# return Screens.INGAMEMENU
-			
+
 		dash_system.update(entities, dt)
 		input_system.update(player)
 		# enemy_ai_system.update(entities, player, [[True for _ in range(1000)] for __ in range(1000)], dt)
