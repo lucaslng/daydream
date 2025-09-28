@@ -1,7 +1,7 @@
 import asyncio
 
 from menu.menu import menu
-from util.prepare import initialize
+import util.prepare
 from game.game import game
 from util.screens import Screens
 from menu.windows.gameover.gameover import gameover
@@ -11,7 +11,6 @@ from menu.windows.finalsummary.finalsummary import finalsummary
 
 
 async def main():
-  initialize()
   screen = Screens.MENU
   level_system = None
   while True:

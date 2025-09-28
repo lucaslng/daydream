@@ -9,6 +9,7 @@ from game.ecs.components.physics import Position
 from game.ecs.components.player import PlayerComponent
 from game.ecs.entity import Entity
 from game.resources.levels import LEVELS
+from game.resources.sfx.sfx import boom_sound
 
 
 class BulletSystem():
@@ -46,14 +47,12 @@ class BulletSystem():
 						bullet_rect.center = bullet_pos.x, bullet_pos.y
 						bullet_rect.size = bullet_collider.width, bullet_collider.height
 						if entity_rect.colliderect(bullet_rect):
-							if entity.has_component(PlayerComponent):
-								deaths.add(entity)
+							boom_sound.play()
+							if entity.has_component(Death):
+								entity.get_component(Death).death = True
 							else:
-								if entity.has_component(Death):
-									entity.get_component(Death).death = True
-								else:
-									entity.add_component(Death())
-								deaths.add(entity)
+								entity.add_component(Death())
+							deaths.add(entity)
 							bullets_to_remove.add(bullet)
 							
 							shooter_id = bullet.get_component(Bullet).shooter_id
