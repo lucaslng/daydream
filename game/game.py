@@ -18,6 +18,7 @@ from game.ecs.systems.hud_system import HUDSystem
 from game.ecs.systems.movement import MovementSystem
 from game.ecs.systems.render import RenderSystem
 from game.ecs.systems.timer_system import TimerSystem
+from game.ecs.systems.upgrades import UpgradeSystem
 from game.ecs.systems.weapon_system import WeaponSystem
 from game.sprites.sprite import Sprite
 from game.background import load_game_background, create_game_overlay
@@ -42,6 +43,7 @@ async def game(level_system=None) -> tuple[Screens, object] | Screens:
 	death_system = DeathSystem()
 	timer_system = TimerSystem()
 	weapon_system = WeaponSystem()
+	upgrade_system = UpgradeSystem()
 	hud_system = HUDSystem()
 	render_system = RenderSystem()
 	
@@ -85,6 +87,9 @@ async def game(level_system=None) -> tuple[Screens, object] | Screens:
 		if player in new_deaths:
 			player.get_component(PlayerComponent).is_alive = False
 		
+		# Remove bullets and dead entities immediately
+		entities.difference_update(new_deaths)
+		upgrade_system.update(player)
 		death_system.deaths.update(new_deaths)
 		
 		remove = death_system.update()
