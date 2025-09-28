@@ -21,6 +21,8 @@ class RenderSystem():
     self._gun_sprite = Sprite("weapons", "assault_rifle").get()
 
     self._maps = [pg.transform.scale_by(pg.image.load(f"game/resources/maps/map_{i}.png"), 4) for i in range(len(LEVELS))]
+    # self._collision_mask = pg.transform.scale_by(pg.mask.from_surface(pg.image.load(
+    #   "game/resources/collision_masks/collision_mask_0.png").convert_alpha()).to_surface(), 4)
 
   def update(self, entities: set[Entity], player: Entity, level: int):
     # draw player
