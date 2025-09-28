@@ -9,7 +9,7 @@ from game.resources.levels import LEVELS
 
 class LevelSystem:
 	def __init__(self):
-		self.level = 0
+		self.level = 2
 		self.enemies_remaining = len(LEVELS[self.level].enemies)
 		self.start_time = time.time()
 		self.level_start_time = time.time()

@@ -53,5 +53,15 @@ LEVELS: list[Level] = [
             EnemyInfo((1767, 1827)),
             EnemyInfo((1623, 1691)),
             EnemyInfo((1623, 1827)),
+        ], []),
+    Level(
+        (1028, 1931),
+        [
+            EnemyInfo((627, 762)),
+            EnemyInfo((322, 529)),
+            EnemyInfo((963, 408)),
+            EnemyInfo((1779, 535)),
+            EnemyInfo((1394, 735)),
+            EnemyInfo((993, 328)),
         ], [])
 ]
