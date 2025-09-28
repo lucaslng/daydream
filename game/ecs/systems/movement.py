@@ -36,15 +36,15 @@ class MovementSystem():
           
           # Check collision for X-axis movement only
           newx = pos.x + total_vx
-          if self._collision_masks[level].overlap(pg.Mask((col.width, col.height), True), 
+          if level < len(self._collision_masks) and self._collision_masks[level].overlap(pg.Mask((col.width, col.height), True), 
                                                  (newx - col.width//2, pos.y - col.height//2)):
-            total_vx = 0  # Block X movement if collision
+            total_vx = 0
           
           # Check collision for Y-axis movement only
           newy = pos.y + total_vy
-          if self._collision_masks[level].overlap(pg.Mask((col.width, col.height), True), 
+          if level < len(self._collision_masks) and self._collision_masks[level].overlap(pg.Mask((col.width, col.height), True), 
                                                  (pos.x - col.width//2, newy - col.height//2)):
-            total_vy = 0  # Block Y movement if collision
+            total_vy = 0
           
           # Apply the allowed movement
           pos.x += total_vx
