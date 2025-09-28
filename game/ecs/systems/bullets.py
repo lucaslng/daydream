@@ -33,7 +33,10 @@ class BulletSystem():
 		
 		# Check bullet collision with entities (players/NPCs)
 		for entity in entities:
-			if entity.has_components(PersonSprite, Collider, Position) and (not entity.has_component(Death) or (entity.has_component(Death) and not entity.get_component(Death).death)):
+			if entity.has_components(PersonSprite, Collider, Position):
+				# Check if entity is already dead
+				if entity.has_component(Death) and entity.get_component(Death).death:
+					continue
 				for bullet in entities:
 					if bullet.has_components(Bullet, Collider, Position) and bullet.get_component(Bullet).shooter_id != entity.id:
 						entity_collider: Collider = entity.get_component(Collider) # type: ignore
@@ -47,20 +50,19 @@ class BulletSystem():
 						bullet_rect.center = bullet_pos.x, bullet_pos.y
 						bullet_rect.size = bullet_collider.width, bullet_collider.height
 						if entity_rect.colliderect(bullet_rect):
-							# Add death component for animation if not already present
-							if not entity.has_component(Death):
+							if entity.has_component(Death):
+								entity.get_component(Death).death = True
+							else:
 								entity.add_component(Death())
 							deaths.add(entity)
 							bullets_to_remove.add(bullet)
 							
-							# Increment kill count for the shooter
 							shooter_id = bullet.get_component(Bullet).shooter_id
 							for potential_shooter in entities:
 								if potential_shooter.id == shooter_id and potential_shooter.has_component(PlayerComponent):
 									player_comp = potential_shooter.get_component(PlayerComponent)
 									player_comp.kills += 1
 		
-		# Add bullets to deaths for removal
 		deaths.update(bullets_to_remove)
 		return deaths
 						

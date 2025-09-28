@@ -20,7 +20,6 @@ class BulletCollisionSystem:
 				bullet_collider: Collider = bullet.get_component(Collider)
 				bullet_pos: Position = bullet.get_component(Position)
 				
-				# Check if bullet hits wall - bullets despawn on wall collision
 				if self._collision_masks[level].overlap(pg.Mask((bullet_collider.width, bullet_collider.height), True), 
 													   (bullet_pos.x - bullet_collider.width//2, bullet_pos.y - bullet_collider.height//2)):
 					bullets_to_remove.add(bullet)

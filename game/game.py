@@ -27,14 +27,15 @@ from util.screens import Screens
 from util.update_screen import update_screen
 
 
-async def game() -> Screens:
+async def game(level_system=None) -> tuple[Screens, object] | Screens:
 	print("started game!")
 	
-	level_system = LevelSystem()
+	if level_system is None:
+		level_system = LevelSystem()
+	
 	player = Entity()
 	player.add_components(level_system.get_level_spawn(), Velocity(0, 0), Speed(500), PersonSprite(Sprite("player_bodies", "a")), PlayerComponent(), Collider(128, 128), Rotation(), Dash(800), Movement())
 	input_system = InputSystem()
-	# enemy_ai_system = AStarSystem()
 	movement_system = MovementSystem()
 	dash_system = DashSystem()
 	bullet_system = BulletSystem()
@@ -66,29 +67,22 @@ async def game() -> Screens:
 			# if event.type == pg.KEYDOWN and event.key == pg.K_o:
 			# 	return Screens.LEVELCLEAR
 			
-			# Weapon switching
 			if event.type == pg.KEYDOWN and event.key == pg.K_TAB:
 				weapon_system.switch_weapon(1)
 			
-			# Start firing
 			if (event.type == pg.KEYDOWN and event.key == pg.K_f) or (event.type == pg.MOUSEBUTTONDOWN and event.button == 1):
 				weapon_system.start_firing(weapon_system.get_current_weapon())
 			
-			# Stop firing
 			if (event.type == pg.KEYUP and event.key == pg.K_f) or (event.type == pg.MOUSEBUTTONUP and event.button == 1):
 				weapon_system.stop_firing(weapon_system.get_current_weapon())
-			# return Screens.INGAMEMENU
 
 		dash_system.update(entities, dt)
 		input_system.update(player)
-		# enemy_ai_system.update(entities, player, [[True for _ in range(1000)] for __ in range(1000)], dt)
 		movement_system.update(entities, dt, level_system.level)
 
-		# Handle bullet collision with walls first
 		wall_collision_bullets = bullet_collision_system.update(entities, level_system.level)
 		entities.difference_update(wall_collision_bullets)
 		
-		# Handle bullet collision with entities
 		new_deaths = bullet_system.update(entities, level_system.level)
 		if player in new_deaths:
 			player.get_component(PlayerComponent).is_alive = False
@@ -104,18 +98,16 @@ async def game() -> Screens:
 		timer_remove = timer_system.update(entities, dt)
 		entities.difference_update(timer_remove)
 		
-		# Update player count and check level completion
 		level_system.update_player_count(entities)
 		
-		# Debug info - you can remove this later
-		if len(entities) % 60 == 0:  # Print every second (60 FPS)
-			print(f"Level: {level_system.level}, Alive Players: {level_system.alive_players}/{level_system.total_players}, Level Time: {level_system.get_level_time():.1f}s")
 		
-		if level_system.is_level_complete():
-			print(f"Level {level_system.level} completed in {level_system.get_level_time():.1f} seconds!")
-			return Screens.LEVELCLEAR
+		if level_system.check_level_complete():
+			level_system.complete_level()
+			if level_system.is_game_complete():
+				return Screens.FINALSUMMARY, level_system
+			else:
+				return Screens.LEVELCLEAR, level_system
 		
-		# Weapon firing system
 		current_weapon = weapon_system.get_current_weapon()
 		if weapon_system.shoot(current_weapon):
 			player_pos = player.get_component(Position)
@@ -127,15 +119,14 @@ async def game() -> Screens:
 
 		render_system.update(entities, player, level_system.level, weapon_system)
 		
-		# Render HUD
 		kill_count = player.get_component(PlayerComponent).kills
 		hud_system.render(kill_count)
-		# print(player.get_component(Position).x, player.get_component(Position).y)
 		level_system.update(entities)
-		if level_system.enemies_remaining == 0:
-			level_system.next_level()
-			entities.update(level_system.get_enemies())
-			player_pos: Position = player.get_component(Position) # type: ignore
-			player_pos.x, player_pos.y = level_system.get_level_spawn().x, level_system.get_level_spawn().y
+		if level_system.check_level_complete():
+			level_system.complete_level()
+			if level_system.is_game_complete():
+				return Screens.FINALSUMMARY, level_system
+			else:
+				return Screens.LEVELCLEAR, level_system
 
 		await update_screen()
