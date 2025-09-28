@@ -81,7 +81,7 @@ async def game(level_system=None) -> tuple[Screens, object] | Screens:
 		dash_system.update(entities, dt)
 		input_system.update(player)
 		movement_system.update(entities, dt, level_system.level)
-		enemy_ai_system.update(entities, player)
+		enemy_ai_system.update(entities, player, level_system.level)
 
 		wall_collision_bullets = bullet_collision_system.update(entities, level_system.level)
 		entities.difference_update(wall_collision_bullets)
@@ -93,14 +93,9 @@ async def game(level_system=None) -> tuple[Screens, object] | Screens:
 			player.get_component(Death).death = True
 			player_pos = player.get_component(Position)
 			player_pos.x, player_pos.y = level_system.get_level_spawn().x, level_system.get_level_spawn().y
-			death_system.reset_entity_death(player)
 		
-		entities_to_remove = new_deaths - {player}
-		entities.difference_update(entities_to_remove)
 		upgrade_system.update(player)
-		death_system.deaths.update(entities_to_remove)
-		if player in new_deaths:
-			death_system.deaths.add(player)
+		death_system.deaths.update(new_deaths)
 		
 		remove = death_system.update()
 		remove.discard(player)

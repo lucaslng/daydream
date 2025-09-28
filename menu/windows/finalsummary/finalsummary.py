@@ -17,7 +17,7 @@ async def finalsummary(level_system) -> Screens:
     
     try:
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        font_path = os.path.join(script_dir, "..", "..", "..", "menu", "resources", "fonts", "LowresPixel-Regular.otf")
+        font_path = os.path.join(script_dir, "menu", "resources", "fonts", "LowresPixel-Regular.otf")
         font = pygame.font.Font(font_path, 24)
         small_font = pygame.font.Font(font_path, 18)
     except:
