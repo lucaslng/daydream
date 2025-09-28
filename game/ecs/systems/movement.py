@@ -12,7 +12,7 @@ class MovementSystem():
         self._collision_mask = pg.mask.from_threshold(levelmap, (0,0,0), (1,1,1))
     
     
-    def update(self, entities: list[Entity], dt: float):
+    def update(self, entities: set[Entity], dt: float):
         for entity in entities:
             if entity.has_components(Position, Velocity):
                 pos: Position = entity.get_component(Position) # type: ignore

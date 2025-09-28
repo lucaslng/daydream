@@ -5,7 +5,7 @@ class Entity():
 	_id_counter = 0
 
 	def __init__(self):
-		self.id = Entity._id_counter
+		self._id = Entity._id_counter
 		Entity._id_counter += 1
 		self.components: dict[type[Component], Component] = {}
 	
@@ -24,3 +24,6 @@ class Entity():
 	
 	def has_components(self, *component_types: type[Component]) -> bool:
 		return all([self.has_component(component_type) for component_type in component_types])
+	
+	def __hash__(self):
+		return hash(self._id)

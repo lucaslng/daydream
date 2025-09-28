@@ -66,7 +66,7 @@ class AStarSystem():
   def __init__(self):
     self._repath_timer = 0.0
 
-  def update(self, entities: list[Entity], player: Entity, grid: list[list[bool]], dt: float):
+  def update(self, entities: set[Entity], player: Entity, grid: list[list[bool]], dt: float):
     repath = False
     self._repath_timer += dt
     if (self._repath_timer > AStarSystem.REPATH_TIME):
