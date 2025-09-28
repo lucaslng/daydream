@@ -12,6 +12,7 @@ from game.ecs.components.person_sprite import PersonSprite
 from game.ecs.components.physics import Movement, Position, Rotation, Velocity
 from game.ecs.components.speed import Speed
 from game.ecs.entitytypes.enemy import enemy
+from game.ecs.entitytypes.shoot import shoot
 from game.ecs.systems.astar_system import AStarSystem
 from game.ecs.systems.bullets import BulletSystem
 from game.ecs.systems.dash import DashSystem
@@ -19,7 +20,6 @@ from game.ecs.systems.deaths import DeathSystem
 from game.ecs.systems.input import InputSystem
 from game.ecs.systems.movement import MovementSystem
 from game.ecs.systems.render import RenderSystem
-from game.ecs.systems.shooting import ShootingSystem
 from game.sprites.sprite import Sprite
 from game.background import load_game_background, create_game_overlay
 from util.prepare import CLOCK, SURF
@@ -41,7 +41,6 @@ async def game() -> Screens:
 	movement_system = MovementSystem(pg.image.load("game/resources/levelmaps/levelmap_1.png").convert())
 	dash_system = DashSystem()
 	bullet_system = BulletSystem()
-	shooting_system = ShootingSystem()
 	death_system = DeathSystem()
 	render_system = RenderSystem()
 	
@@ -64,7 +63,7 @@ async def game() -> Screens:
 				print("hi")
 				player_pos = player.get_component(Position)
 				player_rotation = player.get_component(Rotation)
-				entities.add(shooting_system.create_bullet(player_pos, player_rotation, player.id)) # type: ignore
+				entities.add(shoot(player_pos, player_rotation, player.id)) # type: ignore
 			# return Screens.INGAMEMENU
 
 		dash_system.update(entities, dt)
