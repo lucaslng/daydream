@@ -7,9 +7,9 @@ class WeaponSystem:
 	def __init__(self):
 		self.current_weapon_index = 0
 		self.weapons = [
-			Weapon("ar", 0.15, 4, 1.0),     # AR: 4 shots burst, 1.0s between bursts
-			Weapon("lmg", 0.05, 1, 0.0),    # LMG: Full auto, fast fire rate
-			Weapon("revolver", 0.8, 1, 0.0) # Revolver: Single shot, slow fire rate
+			Weapon("ar", 0.15, 4, 1.0),
+			Weapon("lmg", 0.05, 1, 0.0),
+			Weapon("revolver", 0.8, 1, 0.0)
 		]
 		self.weapon_names = ["ar", "lmg", "revolver"]
 	
