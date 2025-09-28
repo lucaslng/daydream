@@ -27,5 +27,6 @@ class BulletSystem():
 						bullet_rect.size = bullet_collider.width, bullet_collider.height
 						if entity_rect.colliderect(bullet_rect):
 							deaths.add(entity)
+							deaths.add(bullet)
 		return deaths
 						

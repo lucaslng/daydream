@@ -11,7 +11,7 @@ from game.ecs.entity import Entity
 
 class ShootingSystem:
 	def __init__(self):
-		self.bullet_speed = 1000
+		self.bullet_speed = 3000
 		self.bullet_scale = 0.75  #scaled down might change later
 	
 	def create_bullet(self, shooter_pos: Position, shooter_rotation: Rotation, shooter_id) -> Entity:

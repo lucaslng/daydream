@@ -33,9 +33,9 @@ async def game() -> Screens:
 	player.add_components(Position(500, 500), Velocity(0, 0), Speed(500), PersonSprite(Sprite("player_bodies", "a")), PlayerComponent(), Collider(128, 128), Rotation(), Dash(800), Movement())
 
 	# enemy = Entity()
-	# enemy.add_components(Position(500, 400), Velocity(0, 0), Speed(300), PersonSprite(Sprite("player_bodies", "b")), AStarComponent(), Collider(128, 128), Rotation(20), Movement())
+	# enemy.add_components(Death(), Position(500, 400), Velocity(0, 0), Speed(300), PersonSprite(Sprite("player_bodies", "b")), AStarComponent(), Collider(128, 128), Rotation(20), Movement())
 
-	entities = {player}
+	entities = {player, enemy()}
 	input_system = InputSystem()
 	# enemy_ai_system = AStarSystem()
 	movement_system = MovementSystem(pg.image.load("game/resources/levelmaps/levelmap_1.png").convert())
