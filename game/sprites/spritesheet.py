@@ -3,7 +3,7 @@ import pygame as pg
 class SpriteSheet:
     """sprite sheet class"""
 
-    def __init__(self, filename: str, sprites: dict[str, tuple[int, int, int, int]], scale_by: int | None = None) -> None:
+    def __init__(self, filename: str, sprites: dict[str, tuple[int, int, int, int]], scale_by: int | float | None = None) -> None:
         self.sheet = pg.image.load(f"game/resources/spritesheets/{filename}").convert_alpha()
         if scale_by:
             assert scale_by > 1
