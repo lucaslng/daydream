@@ -1,5 +1,7 @@
 import pygame as pg
 
+from game.ecs.components.bullet import Bullet
+from game.ecs.components.circle import Circle
 from game.ecs.components.dash import Dash
 from game.ecs.components.enemy import AStarComponent
 from game.ecs.entity import Entity
@@ -9,6 +11,7 @@ from game.ecs.components.person_sprite import PersonSprite
 from game.ecs.components.physics import Movement, Position, Rotation, Velocity
 from game.ecs.components.speed import Speed
 from game.ecs.systems.astar_system import AStarSystem
+from game.ecs.systems.bullets import BulletSystem
 from game.ecs.systems.dash import DashSystem
 from game.ecs.systems.input import InputSystem
 from game.ecs.systems.movement import MovementSystem
@@ -27,11 +30,16 @@ async def game() -> Screens:
 
 	enemy = Entity()
 	enemy.add_components(Position(500, 400), Velocity(0, 0), Speed(300), PersonSprite(Sprite("player_bodies", "b")), AStarComponent(), Collider(128, 128), Rotation(20), Movement())
-	entities = [player, enemy]
+
+	bullet = Entity()
+	bullet.add_components(Position(500, 700), Velocity(0, 0), Circle(30, (0, 255, 0)), Collider(15, 15), Bullet())
+
+	entities = [player, enemy, bullet]
 	input_system = InputSystem()
 	# enemy_ai_system = AStarSystem()
 	movement_system = MovementSystem(pg.image.load("game/resources/levelmaps/levelmap_1.png").convert())
 	dash_system = DashSystem()
+	bullet_system = BulletSystem()
 	render_system = RenderSystem()
 	
 	background = load_game_background()
@@ -55,6 +63,10 @@ async def game() -> Screens:
 		input_system.update(player)
 		# enemy_ai_system.update(entities, player, [[True for _ in range(1000)] for __ in range(1000)], dt)
 		movement_system.update(entities, dt)
+
+		deaths = bullet_system.update(entities)
+		if player in deaths:
+			return Screens.GAMEOVER
 
 		SURF.blit(background, (0, 0))
 		SURF.blit(overlay, (0, 0))
