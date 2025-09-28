@@ -43,12 +43,8 @@ class LevelSystem:
 	def get_total_time(self) -> float:
 		return time.time() - self.start_time
 		
-	def get_enemies(self) -> set:
-		enemies = set()
-		enemies.add(enemy(Position(300, 300)))
-		enemies.add(enemy(Position(700, 400)))
-		enemies.add(enemy(Position(500, 200)))
-		return enemies
+	def get_enemies(self) -> list[Entity]:
+		return [enemy(Position(*p.pos)) for p in LEVELS[self.level].enemies]
 	
 	def update(self, entities: set[Entity]):
 		self.enemies_remaining = 0
