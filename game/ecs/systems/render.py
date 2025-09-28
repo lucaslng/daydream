@@ -109,3 +109,5 @@ class RenderSystem():
     progress.width = bar.width * min(100, player_component.kills) // 100
     pg.draw.rect(SURF, (196,40,28), bar, border_radius=2)
     pg.draw.rect(SURF, (117,0,0), progress, border_radius=2)
+
+    SURF.fill((player_component.kills,0,0,0), None, pg.BLEND_RGBA_ADD)
