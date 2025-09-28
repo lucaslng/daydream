@@ -3,6 +3,7 @@ import pygame as pg
 from game.ecs.components.circle import Circle
 from game.ecs.components.bullet import Bullet
 from game.ecs.components.death import Death
+from game.ecs.components.player import PlayerComponent
 from game.ecs.entity import Entity
 from game.ecs.components.physics import Position, Rotation
 from game.ecs.components.person_sprite import PersonSprite
@@ -22,6 +23,17 @@ class RenderSystem():
       "ar": Sprite("weapons", "assault_rifle").get(),
       "lmg": Sprite("weapons", "lmg").get(),
       "revolver": Sprite("weapons", "revolver").get()
+    }
+    self._body_surface = Sprite("body", "base_chest").get()
+    for part in ["head", "legs", "arms"]:
+      self._body_surface.blit(Sprite("body", f"base_{part}").get())
+    self._upgraded_sprites = {
+      "head": Sprite("body", "upgraded_head").get(),
+      "chest": Sprite("body", "upgraded_chest").get(),
+      "arms_top": Sprite("body", "upgraded_arms_top").get(),
+      "arms_bottom": Sprite("body", "upgraded_arms_bottom").get(),
+      "legs_top": Sprite("body", "upgraded_legs_top").get(),
+      "legs_bottom": Sprite("body", "upgraded_legs_bottom").get()
     }
 
     self._maps = [pg.transform.scale_by(pg.image.load(f"game/resources/maps/map_{i}.png"), 4) for i in range(len(LEVELS))]
@@ -75,3 +87,11 @@ class RenderSystem():
         if entity.has_component(Circle):
           circle: Circle = entity.get_component(Circle)  # type: ignore
           pg.draw.circle(SURF, circle.color, new_pos, circle.size)
+
+    # render upgrades
+    body_dest = self._body_surface.get_rect(bottomleft=(SURF.get_rect().bottomleft))
+    SURF.blit(self._body_surface, body_dest)
+    player_component: PlayerComponent = player.get_component(PlayerComponent) # type: ignore
+    for upgrade, obtained in player_component.upgrades.items():
+      if obtained:
+        SURF.blit(self._upgraded_sprites[upgrade], body_dest)
