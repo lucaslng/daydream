@@ -101,3 +101,11 @@ class RenderSystem():
     for upgrade, obtained in player_component.upgrades.items():
       if obtained:
         SURF.blit(self._upgraded_sprites[upgrade], body_dest)
+
+    # insanity bar
+    bar = pg.Rect(0, 30, 800, 30)
+    bar.centerx = SURF.get_rect().centerx
+    progress = bar.copy()
+    progress.width = bar.width * min(100, player_component.kills) // 100
+    pg.draw.rect(SURF, (196,40,28), bar, border_radius=2)
+    pg.draw.rect(SURF, (117,0,0), progress, border_radius=2)
