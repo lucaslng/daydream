@@ -6,8 +6,8 @@ from game.ecs.components.death import Death
 from game.ecs.entity import Entity
 from game.ecs.components.physics import Position, Rotation
 from game.ecs.components.person_sprite import PersonSprite
-from game.sprites.sprite import Sprite
 from util.prepare import SURF
+from game.sprites.sprite import Sprite
 
 
 class RenderSystem():
@@ -41,11 +41,13 @@ class RenderSystem():
             frame = entity.get_component(Death).frame // 2 # type: ignore
             death_sprite = self._death_sprites[frame].get()
             SURF.blit(death_sprite, death_sprite.get_rect(center=new_pos))
-        #bullet scaled down might change lata
         if entity.has_component(Bullet):
-          print("hi")
-          SURF.blit(self._bullet_sprite, new_pos)
-          pg.draw.circle(SURF, (255,0,0), new_pos, 20)
+          if entity.has_component(Rotation):
+            angle: float = entity.get_component(Rotation).angle
+            rotated_bullet = pg.transform.rotate(self._bullet_sprite, -angle)
+            SURF.blit(rotated_bullet, rotated_bullet.get_rect(center=new_pos))
+          else:
+            SURF.blit(self._bullet_sprite, self._bullet_sprite.get_rect(center=new_pos))
         if entity.has_component(Circle):
           circle: Circle = entity.get_component(Circle)  # type: ignore
           pg.draw.circle(SURF, circle.color, new_pos, circle.size)

@@ -4,7 +4,7 @@ from game.ecs.components.collider import Collider
 from game.ecs.components.physics import Position, Rotation, Velocity
 from game.ecs.entity import Entity
 
-SPEED = 3000
+SPEED = 3267
 
 def shoot(shooter_pos: Position, shooter_rotation: Rotation, shooter_id) -> Entity:
 		"""Create a bullet that shoots forward from the player's position"""
