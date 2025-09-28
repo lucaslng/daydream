@@ -3,7 +3,7 @@ from math import degrees, atan2
 
 from game.ecs.components.speed import Speed
 from game.ecs.entity import Entity
-from game.ecs.components.enemy import AStarComponent
+from game.ecs.components.astar import AStarComponent
 from game.ecs.components.physics import Position, Rotation, Velocity
 
 

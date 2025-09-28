@@ -1,19 +1,13 @@
 import pygame as pg
 
-from game.ecs.components.bullet import Bullet
-from game.ecs.components.circle import Circle
 from game.ecs.components.dash import Dash
-from game.ecs.components.death import Death
-from game.ecs.components.enemy import AStarComponent
 from game.ecs.entity import Entity
 from game.ecs.components.collider import Collider
 from game.ecs.components.player import PlayerComponent
 from game.ecs.components.person_sprite import PersonSprite
 from game.ecs.components.physics import Movement, Position, Rotation, Velocity
 from game.ecs.components.speed import Speed
-from game.ecs.entitytypes.enemy import enemy
 from game.ecs.entitytypes.shoot import shoot
-from game.ecs.systems.astar_system import AStarSystem
 from game.ecs.systems.bullets import BulletSystem
 from game.ecs.systems.dash import DashSystem
 from game.ecs.systems.deaths import DeathSystem
@@ -32,14 +26,10 @@ from util.update_screen import update_screen
 
 async def game() -> Screens:
 	print("started game!")
-	player = Entity()
-	player.add_components(Position(500, 500), Velocity(0, 0), Speed(500), PersonSprite(Sprite("player_bodies", "a")), PlayerComponent(), Collider(128, 128), Rotation(), Dash(800), Movement())
-
-	# enemy = Entity()
-	# enemy.add_components(Death(), Position(500, 400), Velocity(0, 0), Speed(300), PersonSprite(Sprite("player_bodies", "b")), AStarComponent(), Collider(128, 128), Rotation(20), Movement())
-
-	entities = {player}
+	
 	level_system = LevelSystem()
+	player = Entity()
+	player.add_components(level_system.get_level_spawn(), Velocity(0, 0), Speed(500), PersonSprite(Sprite("player_bodies", "a")), PlayerComponent(), Collider(128, 128), Rotation(), Dash(800), Movement())
 	input_system = InputSystem()
 	# enemy_ai_system = AStarSystem()
 	movement_system = MovementSystem()
@@ -53,6 +43,7 @@ async def game() -> Screens:
 	background = load_game_background()
 	overlay = create_game_overlay()
 
+	entities = {player}
 	entities.update(level_system.get_enemies())
 	
 	while True:
@@ -103,11 +94,18 @@ async def game() -> Screens:
 		if weapon_system.shoot(current_weapon):
 			player_pos = player.get_component(Position)
 			player_rotation = player.get_component(Rotation)
-			entities.add(shoot(player_pos, player_rotation, player.id))
+			entities.add(shoot(player_pos, player_rotation, player.id)) # type: ignore
 
 		SURF.blit(background, (0, 0))
 		SURF.blit(overlay, (0, 0))
 
 		render_system.update(entities, player, level_system.level, weapon_system)
+		# print(player.get_component(Position).x, player.get_component(Position).y)
+		level_system.update(entities)
+		if level_system.enemies_remaining == 0:
+			level_system.next_level()
+			entities.update(level_system.get_enemies())
+			player_pos: Position = player.get_component(Position) # type: ignore
+			player_pos.x, player_pos.y = level_system.get_level_spawn().x, level_system.get_level_spawn().y
 
 		await update_screen()
