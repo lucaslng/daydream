@@ -1,6 +1,8 @@
 import pygame as pg
 
 from game.ecs.components.dash import Dash
+from game.ecs.components.death import Death
+from game.ecs.components.enemy import Enemy
 from game.ecs.entity import Entity
 from game.ecs.components.collider import Collider
 from game.ecs.components.player import PlayerComponent
@@ -94,6 +96,7 @@ async def game(level_system=None) -> tuple[Screens, object] | Screens:
 		
 		remove = death_system.update()
 		entities.difference_update(remove)
+		render_system.blood_positions.update(map(lambda d: d.get_component(Position), filter(lambda e: e.has_component(Enemy), remove)))
 		
 		timer_remove = timer_system.update(entities, dt)
 		entities.difference_update(timer_remove)

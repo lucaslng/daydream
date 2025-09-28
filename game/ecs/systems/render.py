@@ -36,6 +36,9 @@ class RenderSystem():
       "legs_bottom": Sprite("body", "upgraded_legs_bottom").get()
     }
 
+    self._blood_sprite = Sprite("death_animation", "blood").get()
+    self.blood_positions: set[Position] = set()
+
     self._maps = [pg.transform.scale_by(pg.image.load(f"game/resources/maps/map_{i}.png"), 4) for i in range(len(LEVELS))]
     # self._collision_mask = pg.transform.scale_by(pg.mask.from_surface(pg.image.load(
     #   "game/resources/collision_masks/collision_mask_0.png").convert_alpha()).to_surface(), 4)
@@ -89,6 +92,9 @@ class RenderSystem():
           circle: Circle = entity.get_component(Circle)  # type: ignore
           pg.draw.circle(SURF, circle.color, new_pos, circle.size)
 
+    for blood_pos in self.blood_positions:
+      SURF.blit(self._blood_sprite, self._blood_sprite.get_rect(center=(blood_pos.x + offset_x, blood_pos.y + offset_y)))
+    
     body_dest = self._body_surface.get_rect(bottomleft=(SURF.get_rect().bottomleft))
     SURF.blit(self._body_surface, body_dest)
     player_component: PlayerComponent = player.get_component(PlayerComponent) # type: ignore
