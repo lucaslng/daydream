@@ -27,6 +27,8 @@ class Level():
 LEVELS: list[Level] = [
     Level([
         EnemyInfo((500, 400)),
+        EnemyInfo((800, 600)),
+        EnemyInfo((1200, 800)),
     ],
         [])
 ]
