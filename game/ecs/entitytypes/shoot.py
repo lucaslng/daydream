@@ -21,7 +21,7 @@ def shoot(shooter_pos: Position, shooter_rotation: Rotation, shooter_id) -> Enti
 			Collider(12, 12),  #scaled collision box !!!!!!!!!!! sync with self.bullet_scale please
 			Bullet(shooter_id),
 			Rotation(shooter_rotation.angle),
-			Timer(1.5)  #bullet despawn timer - change later
+			Timer(.35)  #bullet despawn timer - change later
 		)
 		
 		return bullet
