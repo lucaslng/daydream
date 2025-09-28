@@ -10,10 +10,10 @@ class Sprite():
           "b": (160, 0, 32, 32)
         }, 4),
       "weapons": SpriteSheet("spritesheet.png", {
-          "assault_rifle": (0, 32, 32, 32),
-          "bullet": (32, 32, 32, 32),
-          "lmg": (64, 32, 32, 32),
-          "revolver": (96, 32, 32, 32)
+          "assault_rifle": (0, 0, 32, 32),
+          "bullet": (32, 0, 32, 32),
+          "lmg": (64, 0, 32, 32),
+          "revolver": (96, 0, 32, 32)
         }, 4),
       "death_animation": SpriteSheet("death_animation.png", {
           "0": (0, 0, 256, 256),
