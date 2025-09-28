@@ -4,15 +4,16 @@ from game.ecs.components.collider import Collider
 from game.ecs.components.speed import Speed
 from game.ecs.entity import Entity
 from game.ecs.components.physics import Movement, Position, Velocity
+from game.resources.levels import LEVELS
 
 
 class MovementSystem():
 
-    def __init__(self, levelmap: pg.Surface):
-        self._collision_mask = pg.mask.from_threshold(levelmap, (0,0,0), (1,1,1))
+    def __init__(self):
+        self.collision_masks = [pg.mask.from_threshold(pg.image.load(f"game/resources/maps/map_{i}.png").convert(), (0,0,0), (1,1,1)) for i in range(len(LEVELS))]
+
     
-    
-    def update(self, entities: set[Entity], dt: float):
+    def update(self, entities: set[Entity], dt: float, level: int):
         for entity in entities:
             if entity.has_components(Position, Velocity):
                 pos: Position = entity.get_component(Position) # type: ignore

@@ -6,6 +6,7 @@ from game.ecs.components.death import Death
 from game.ecs.entity import Entity
 from game.ecs.components.physics import Position, Rotation
 from game.ecs.components.person_sprite import PersonSprite
+from game.resources.levels import LEVELS
 from util.prepare import SURF
 from game.sprites.sprite import Sprite
 
@@ -18,16 +19,16 @@ class RenderSystem():
       death_animation_filename, "2"), Sprite(death_animation_filename, "3"), Sprite(death_animation_filename, "4"), Sprite(death_animation_filename, "5"))
     self._bullet_sprite = pg.transform.scale_by(Sprite("weapons", "bullet").get(), 0.75)
 
-    self._map = pg.transform.scale_by(pg.image.load("game/resources/maps/map_1.png"), 4)
+    self._maps = [pg.transform.scale_by(pg.image.load(f"game/resources/maps/map_{i}.png"), 4) for i in range(len(LEVELS))]
 
-  def update(self, entities: set[Entity], player: Entity, map: pg.Surface):
+  def update(self, entities: set[Entity], player: Entity, level: int):
     # draw player
 
     player_pos: Position = player.get_component(Position)  # type: ignore
     offset_x = SURF.get_rect().centerx - player_pos.x
     offset_y = SURF.get_rect().centery - player_pos.y
 
-    SURF.blit(self._map, (offset_x, offset_y))
+    SURF.blit(self._maps[level], (offset_x, offset_y))
 
     for entity in entities:
       if entity.has_component(Position):

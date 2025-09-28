@@ -8,7 +8,7 @@ from game.ecs.entity import Entity
 from game.sprites.sprite import Sprite
 
 
-def enemy():
+def enemy(position: Position):
 	enemy = Entity()
-	enemy.add_components(Death(), Position(500, 700), Velocity(0, 0), Speed(300), PersonSprite(Sprite("player_bodies", "b")), AStarComponent(), Collider(128, 128), Rotation(20), Movement())
+	enemy.add_components(Death(), position, Velocity(0, 0), Speed(300), PersonSprite(Sprite("player_bodies", "b")), AStarComponent(), Collider(128, 128), Rotation(20), Movement())
 	return enemy

@@ -18,6 +18,7 @@ from game.ecs.systems.bullets import BulletSystem
 from game.ecs.systems.dash import DashSystem
 from game.ecs.systems.deaths import DeathSystem
 from game.ecs.systems.input import InputSystem
+from game.ecs.systems.level_system import LevelSystem
 from game.ecs.systems.movement import MovementSystem
 from game.ecs.systems.render import RenderSystem
 from game.sprites.sprite import Sprite
@@ -35,10 +36,11 @@ async def game() -> Screens:
 	# enemy = Entity()
 	# enemy.add_components(Death(), Position(500, 400), Velocity(0, 0), Speed(300), PersonSprite(Sprite("player_bodies", "b")), AStarComponent(), Collider(128, 128), Rotation(20), Movement())
 
-	entities = {player, enemy()}
+	entities = {player}
+	level_system = LevelSystem()
 	input_system = InputSystem()
 	# enemy_ai_system = AStarSystem()
-	movement_system = MovementSystem(pg.image.load("game/resources/levelmaps/levelmap_1.png").convert())
+	movement_system = MovementSystem()
 	dash_system = DashSystem()
 	bullet_system = BulletSystem()
 	death_system = DeathSystem()
@@ -46,6 +48,8 @@ async def game() -> Screens:
 	
 	background = load_game_background()
 	overlay = create_game_overlay()
+
+	entities.update(level_system.get_enemies())
 	
 	while True:
 		dt = CLOCK.tick(60) / 1000.0
@@ -69,7 +73,7 @@ async def game() -> Screens:
 		dash_system.update(entities, dt)
 		input_system.update(player)
 		# enemy_ai_system.update(entities, player, [[True for _ in range(1000)] for __ in range(1000)], dt)
-		movement_system.update(entities, dt)
+		movement_system.update(entities, dt, level_system.level)
 
 		new_deaths = bullet_system.update(entities)
 		if player in new_deaths:
@@ -83,6 +87,6 @@ async def game() -> Screens:
 		SURF.blit(background, (0, 0))
 		SURF.blit(overlay, (0, 0))
 
-		render_system.update(entities, player, pg.image.load("game/resources/levelmaps/levelmap_1.png").convert())
+		render_system.update(entities, player, level_system.level)
 
 		await update_screen()
