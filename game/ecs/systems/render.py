@@ -18,12 +18,16 @@ class RenderSystem():
       death_animation_filename, "2"), Sprite(death_animation_filename, "3"), Sprite(death_animation_filename, "4"), Sprite(death_animation_filename, "5"))
     self._bullet_sprite = pg.transform.scale_by(Sprite("weapons", "bullet").get(), 0.75)
 
+    self._map = pg.transform.scale_by(pg.image.load("game/resources/maps/map_1.png"), 4)
+
   def update(self, entities: set[Entity], player: Entity, map: pg.Surface):
     # draw player
 
     player_pos: Position = player.get_component(Position)  # type: ignore
     offset_x = SURF.get_rect().centerx - player_pos.x
     offset_y = SURF.get_rect().centery - player_pos.y
+
+    SURF.blit(self._map, (offset_x, offset_y))
 
     for entity in entities:
       if entity.has_component(Position):
