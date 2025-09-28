@@ -59,8 +59,8 @@ class RenderSystem():
           current_weapon_type = weapon_system.get_current_weapon().weapon_type if weapon_system else "ar"
           gun_sprite = self._gun_sprites[current_weapon_type]
           gun_rotated = pg.transform.rotate(gun_sprite, -angle)
-          gun_offset_x = 20 * pg.math.Vector2(1, 0).rotate(angle).x
-          gun_offset_y = 20 * pg.math.Vector2(1, 0).rotate(angle).y
+          gun_offset_x = 25 * pg.math.Vector2(1, 0).rotate(angle).x + 12 * pg.math.Vector2(0, 1).rotate(angle).x
+          gun_offset_y = 25 * pg.math.Vector2(1, 0).rotate(angle).y + 12 * pg.math.Vector2(0, 1).rotate(angle).y
           gun_pos = (new_pos[0] + gun_offset_x, new_pos[1] + gun_offset_y + 16)
           SURF.blit(gun_rotated, gun_rotated.get_rect(center=gun_pos))
         
@@ -72,11 +72,16 @@ class RenderSystem():
           rotated = pg.transform.rotate(
             sprite_surface, -angle)  # type: ignore
           SURF.blit(rotated, rotated.get_rect(center=new_pos))
-          
-          if entity.has_component(Death) and entity.get_component(Death).death: # type: ignore
-            frame = entity.get_component(Death).frame // 2 # type: ignore
-            death_sprite = self._death_sprites[frame].get()
-            SURF.blit(death_sprite, death_sprite.get_rect(center=new_pos))
+        
+        # Render death animation for any entity with Death component
+        if entity.has_component(Death) and entity.get_component(Death).death: # type: ignore
+          frame = entity.get_component(Death).frame // 2 # type: ignore
+          # Simple explosion effect with colored circles
+          explosion_size = 30 + (frame * 8)
+          explosion_color = (255, 255 - frame * 30, 0)  # Yellow to red
+          pg.draw.circle(SURF, explosion_color, (int(new_pos[0]), int(new_pos[1])), explosion_size)
+          # Add a second circle for more visibility
+          pg.draw.circle(SURF, (255, 255, 255), (int(new_pos[0]), int(new_pos[1])), explosion_size - 10)
         if entity.has_component(Bullet):
           if entity.has_component(Rotation):
             angle: float = entity.get_component(Rotation).angle

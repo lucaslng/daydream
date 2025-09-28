@@ -11,3 +11,5 @@ class PlayerComponent(Component):
         "arms_bottom",
         "legs_top",
         "legs_bottom"]}
+
+    self.is_alive = True
