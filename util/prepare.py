@@ -4,7 +4,7 @@ import pygame as pg
 FPS = 60
 WINDOW = (1080, 720)
 CLOCK = pg.time.Clock()
-SURF = pg.display.set_mode(WINDOW)
+SURF = pg.display.set_mode(WINDOW, vsync=1)
 
 def initialize():
 	'''initialize program'''
