@@ -1,11 +1,9 @@
 import pygame as pg
 
 from game.ecs.components.collider import Collider
-from game.ecs.components.speed import Speed
 from game.ecs.entity import Entity
 from game.ecs.components.physics import Movement, Position, Velocity
 from game.resources.levels import LEVELS
-from util.prepare import SURF
 
 
 class MovementSystem():
