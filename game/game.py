@@ -119,7 +119,7 @@ async def game(level_system=None) -> tuple[Screens, object] | Screens:
 		if weapon_system.shoot(current_weapon):
 			player_pos = player.get_component(Position)
 			player_rotation = player.get_component(Rotation)
-			entities.add(shoot(player_pos, player_rotation, player.id))
+			entities.add(shoot(player_pos, player_rotation, player.id, player.get_component(PlayerComponent).kills/100))
 
 		SURF.blit(background, (0, 0))
 		SURF.blit(overlay, (0, 0))
