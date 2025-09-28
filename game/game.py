@@ -23,7 +23,7 @@ from util.update_screen import update_screen
 async def game() -> Screens:
 	print("started game!")
 	player = Entity()
-	player.add_components(Position(500, 500), Velocity(0, 0), Speed(500), PersonSprite(Sprite("player_bodies", "a")), PlayerComponent(), Collider(128, 128), Rotation(), Dash(400), Movement())
+	player.add_components(Position(500, 500), Velocity(0, 0), Speed(500), PersonSprite(Sprite("player_bodies", "a")), PlayerComponent(), Collider(128, 128), Rotation(), Dash(800), Movement())
 
 	enemy = Entity()
 	enemy.add_components(Position(500, 400), Velocity(0, 0), Speed(300), PersonSprite(Sprite("player_bodies", "b")), AStarComponent(), Collider(128, 128), Rotation(20), Movement())

@@ -39,6 +39,6 @@ class InputSystem():
     if keys[pg.K_SPACE]:
       dash: Dash = player.get_component(Dash) # type: ignore
       if dash.dash_timer <= 0.0:
-        dash.dash_timer = dash.dash_cooldown
+        dash.dash_timer = dash.cooldown
         vel.vx += dash.dash_speed * sin(radians(rotation.angle))
         vel.vy += dash.dash_speed * -cos(radians(rotation.angle))
