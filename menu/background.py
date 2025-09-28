@@ -1,6 +1,6 @@
 import pygame
 import os
-from util.prepare import WINDOW
+from util.prepare import SURF, WINDOW
 
 
 def loadthebackround():

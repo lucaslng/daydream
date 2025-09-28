@@ -9,7 +9,6 @@ from menu.windows.levelcomplete.levelclear import levelclear
 from menu.windows.ingamemenu.ingamemenu import ingamemenu
 
 
-
 async def main():
   initialize()
   screen = Screens.MENU
