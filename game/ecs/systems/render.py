@@ -73,15 +73,11 @@ class RenderSystem():
             sprite_surface, -angle)  # type: ignore
           SURF.blit(rotated, rotated.get_rect(center=new_pos))
         
-        # Render death animation for any entity with Death component
         if entity.has_component(Death) and entity.get_component(Death).death: # type: ignore
           frame = entity.get_component(Death).frame // 2 # type: ignore
-          # Simple explosion effect with colored circles
-          explosion_size = 30 + (frame * 8)
-          explosion_color = (255, 255 - frame * 30, 0)  # Yellow to red
-          pg.draw.circle(SURF, explosion_color, (int(new_pos[0]), int(new_pos[1])), explosion_size)
-          # Add a second circle for more visibility
-          pg.draw.circle(SURF, (255, 255, 255), (int(new_pos[0]), int(new_pos[1])), explosion_size - 10)
+          if frame < 6:
+            death_sprite = self._death_sprites[frame].get()
+            SURF.blit(death_sprite, death_sprite.get_rect(center=new_pos))
         if entity.has_component(Bullet):
           if entity.has_component(Rotation):
             angle: float = entity.get_component(Rotation).angle
@@ -93,7 +89,6 @@ class RenderSystem():
           circle: Circle = entity.get_component(Circle)  # type: ignore
           pg.draw.circle(SURF, circle.color, new_pos, circle.size)
 
-    # render upgrades
     body_dest = self._body_surface.get_rect(bottomleft=(SURF.get_rect().bottomleft))
     SURF.blit(self._body_surface, body_dest)
     player_component: PlayerComponent = player.get_component(PlayerComponent) # type: ignore

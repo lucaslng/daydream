@@ -15,6 +15,8 @@ class LevelSystem:
 		self.level_start_time = time.time()
 		self.total_players = 0
 		self.alive_players = 0
+		self.level_times = [0.0, 0.0, 0.0]
+		self.is_level_complete = False
 	
 	def start_level(self, entities: set[Entity]):
 		self.level_start_time = time.time()
@@ -34,8 +36,8 @@ class LevelSystem:
 				if entity.get_component(PlayerComponent).is_alive:
 					self.alive_players += 1
 	
-	def is_level_complete(self) -> bool:
-		return self.alive_players <= 0
+	def check_level_complete(self) -> bool:
+		return self.enemies_remaining <= 0
 	
 	def get_level_time(self) -> float:
 		return time.time() - self.level_start_time
@@ -44,7 +46,10 @@ class LevelSystem:
 		return time.time() - self.start_time
 		
 	def get_enemies(self) -> list[Entity]:
-		return [enemy(Position(*p.pos)) for p in LEVELS[self.level].enemies]
+		if self.level < len(LEVELS):
+			return [enemy(Position(*p.pos)) for p in LEVELS[self.level].enemies]
+		else:
+			return []
 	
 	def update(self, entities: set[Entity]):
 		self.enemies_remaining = 0
@@ -52,10 +57,27 @@ class LevelSystem:
 			if entity.has_component(Enemy):
 				self.enemies_remaining += 1
 	
+	def complete_level(self):
+		self.level_times[self.level] = self.get_level_time()
+		self.is_level_complete = True
+	
 	def next_level(self):
 		self.level += 1
-		self.enemies_remaining = len(LEVELS[self.level].enemies)
-		self.level_start_time = time.time()
+		if self.level < len(LEVELS):
+			self.enemies_remaining = len(LEVELS[self.level].enemies)
+			self.level_start_time = time.time()
+			self.is_level_complete = False
+		else:
+			self.is_level_complete = True
+	
+	def is_game_complete(self) -> bool:
+		return self.level >= len(LEVELS)
+	
+	def get_total_time(self) -> float:
+		return sum(self.level_times)
 	
 	def get_level_spawn(self):
-		return Position(*LEVELS[self.level].spawn_pos)
+		if self.level < len(LEVELS):
+			return Position(*LEVELS[self.level].spawn_pos)
+		else:
+			return Position(500, 500)

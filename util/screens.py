@@ -7,4 +7,5 @@ class Screens(Enum):
 	INGAMEMENU = auto()
 	GAMEOVER = auto()
 	LEVELCLEAR = auto()
+	FINALSUMMARY = auto()
 	DEADMESSAGE = auto()
