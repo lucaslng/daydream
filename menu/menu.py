@@ -1,8 +1,7 @@
 import pygame
 import os
 from util.screens import Screens
-from util.prepare import SURF, WINDOW
-from .theme import gametheme
+from util.prepare import SURF
 from .background import loadthebackround, blackoverlay as create_overlay 
 from util.update_screen import update_screen
 from .elements import button_configs, label_configs as get_label_config
@@ -40,14 +39,12 @@ async def menu() -> Screens:
         button_font = pygame.font.SysFont("arial", 22, bold=True)
     
     play_rect = pygame.Rect(*button_config["play"]["rect"])
-    settings_rect = pygame.Rect(*button_config["settings"]["rect"])
     quit_rect = pygame.Rect(*button_config["quit"]["rect"])
     
     while True:
         mouse_pos = pygame.mouse.get_pos()
         
         play_hovered = play_rect.collidepoint(mouse_pos)
-        settings_hovered = settings_rect.collidepoint(mouse_pos)
         quit_hovered = quit_rect.collidepoint(mouse_pos)
         
         for event in pygame.event.get():
@@ -58,8 +55,6 @@ async def menu() -> Screens:
                 if event.button == 1:
                     if play_hovered:
                         return Screens.GAME
-                    elif settings_hovered:
-                        pass
                     elif quit_hovered:
                         raise SystemExit
         
@@ -67,15 +62,19 @@ async def menu() -> Screens:
         overlay = create_overlay()
         SURF.blit(overlay, (0, 0))
         
-        # Draw title and subtitle
-        title_rect = pygame.Rect(*label_config["title"]["rect"])
+        bleeding_rect = pygame.Rect(*label_config["title_bleeding"]["rect"])
+        metal_rect = pygame.Rect(*label_config["title_metal"]["rect"])
         subtitle_rect = pygame.Rect(*label_config["subtitle"]["rect"])
-        draw_shadow_text(SURF, title_font, label_config["title"]["text"], title_rect.x, title_rect.y)
-        draw_shadow_text(SURF, button_font, label_config["subtitle"]["text"], subtitle_rect.x, subtitle_rect.y)
         
-        # Draw buttons
+        draw_shadow_text(SURF, title_font, label_config["title_bleeding"]["text"], bleeding_rect.x, bleeding_rect.y, label_config["title_bleeding"]["color"])
+        draw_shadow_text(SURF, title_font, label_config["title_metal"]["text"], metal_rect.x, metal_rect.y, label_config["title_metal"]["color"])
+        
+        subtitle_text = label_config["subtitle"]["text"]
+        subtitle_surf = button_font.render(subtitle_text, True, label_config["subtitle"]["color"])
+        subtitle_text_rect = subtitle_surf.get_rect(center=subtitle_rect.center)
+        draw_shadow_text(SURF, button_font, subtitle_text, subtitle_text_rect.x, subtitle_text_rect.y, label_config["subtitle"]["color"])
+        
         draw_button(SURF, play_rect, button_config["play"]["text"], button_font, (255, 255, 255), play_hovered)
-        draw_button(SURF, settings_rect, button_config["settings"]["text"], button_font, (255, 255, 255), settings_hovered)
         draw_button(SURF, quit_rect, button_config["quit"]["text"], button_font, (255, 255, 255), quit_hovered)
         
         await update_screen()

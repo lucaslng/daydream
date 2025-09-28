@@ -14,6 +14,7 @@ from game.ecs.systems.input import InputSystem
 from game.ecs.systems.movement import MovementSystem
 from game.ecs.systems.render import RenderSystem
 from game.sprites.sprite import Sprite
+from game.background import load_game_background, create_game_overlay
 from util.prepare import CLOCK, SURF
 from util.screens import Screens
 from util.update_screen import update_screen
@@ -33,6 +34,9 @@ async def game() -> Screens:
 	dash_system = DashSystem()
 	render_system = RenderSystem()
 	
+	background = load_game_background()
+	overlay = create_game_overlay()
+	
 	while True:
 		dt = CLOCK.tick(60) / 1000.0
 
@@ -47,6 +51,18 @@ async def game() -> Screens:
 		movement_system.update(entities, dt)
 
 		SURF.fill((10, 10, 10))
+				return Screens.INGAMEMENU
+			if event.type == pg.KEYDOWN and event.key == pg.K_i:
+				return Screens.GAMEOVER
+			if event.type == pg.KEYDOWN and event.key == pg.K_o:
+				return Screens.LEVELCLEAR
+			
+		input_system.update(entities, player, dt)
+		movement_system.update(entities, player, dt)
+		
+
+		SURF.blit(background, (0, 0))
+		SURF.blit(overlay, (0, 0))
 
 		render_system.update(entities, player, pg.image.load("game/resources/levelmaps/levelmap_1.png").convert())
 
