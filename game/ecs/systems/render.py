@@ -26,7 +26,7 @@ class RenderSystem():
     }
     self._body_surface = Sprite("body", "base_chest").get()
     for part in ["head", "legs", "arms"]:
-      self._body_surface.blit(Sprite("body", f"base_{part}").get())
+      self._body_surface.blit(Sprite("body", f"base_{part}").get(), (0,0))
     self._upgraded_sprites = {
       "head": Sprite("body", "upgraded_head").get(),
       "chest": Sprite("body", "upgraded_chest").get(),
