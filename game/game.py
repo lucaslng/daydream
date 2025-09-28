@@ -45,21 +45,16 @@ async def game() -> Screens:
 				raise SystemExit
 			if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
 				return Screens.MENU
-		dash_system.update(entities, dt)
-		input_system.update(player)
-		# enemy_ai_system.update(entities, player, [[True for _ in range(1000)] for __ in range(1000)], dt)
-		movement_system.update(entities, dt)
-
-		SURF.fill((10, 10, 10))
-				return Screens.INGAMEMENU
 			if event.type == pg.KEYDOWN and event.key == pg.K_i:
 				return Screens.GAMEOVER
 			if event.type == pg.KEYDOWN and event.key == pg.K_o:
 				return Screens.LEVELCLEAR
+			# return Screens.INGAMEMENU
 			
-		input_system.update(entities, player, dt)
-		movement_system.update(entities, player, dt)
-		
+		dash_system.update(entities, dt)
+		input_system.update(player)
+		# enemy_ai_system.update(entities, player, [[True for _ in range(1000)] for __ in range(1000)], dt)
+		movement_system.update(entities, dt)
 
 		SURF.blit(background, (0, 0))
 		SURF.blit(overlay, (0, 0))
