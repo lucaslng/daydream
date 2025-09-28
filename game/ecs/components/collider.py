@@ -1,4 +1,4 @@
-from game.ecs.Component import Component
+from game.ecs.component import Component
 
 
 class Collider(Component):

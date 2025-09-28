@@ -1,13 +1,13 @@
-from game.ecs.Component import Component
+from game.ecs.component import Component
 
 
 class Position(Component):
-	def __init__(self, x=0, y=0):
+	def __init__(self, x: int=0, y: int=0):
 		self.x = x
 		self.y = y
 
 class Velocity(Component):
-	def __init__(self, vx=0, vy=0):
+	def __init__(self, vx: float = 0, vy: float = 0):
 		self.vx = vx
 		self.vy = vy
 
