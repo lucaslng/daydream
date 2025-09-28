@@ -17,7 +17,7 @@ class RenderSystem():
     death_animation_filename = "death_animation"
     self._death_sprites = (Sprite(death_animation_filename, "0"), Sprite(death_animation_filename, "1"), Sprite(
       death_animation_filename, "2"), Sprite(death_animation_filename, "3"), Sprite(death_animation_filename, "4"), Sprite(death_animation_filename, "5"))
-    self._bullet_sprite = pg.transform.scale_by(Sprite("weapons", "bullet").get(), 0.75)
+    self._bullet_sprite = pg.transform.scale_by(Sprite("weapons", "bullet").get(), 0.35) # scale the bullet
     self._gun_sprites = {
       "ar": Sprite("weapons", "assault_rifle").get(),
       "lmg": Sprite("weapons", "lmg").get(),
@@ -39,7 +39,7 @@ class RenderSystem():
       if entity.has_component(Position):
         entity_pos: Position = entity.get_component(Position)  # type: ignore
         new_pos = (entity_pos.x + offset_x, entity_pos.y + offset_y)
-        # Draw gun attached to player (under the player for depth)
+        #gun tio plaer fx osffset latear change x falveu up
         if entity == player and entity.has_components(PersonSprite, Rotation):
           angle: float = entity.get_component(Rotation).angle  # type: ignore
           current_weapon_type = weapon_system.get_current_weapon().weapon_type if weapon_system else "ar"
