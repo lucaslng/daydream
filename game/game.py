@@ -22,6 +22,7 @@ from game.ecs.systems.level_system import LevelSystem
 from game.ecs.systems.movement import MovementSystem
 from game.ecs.systems.render import RenderSystem
 from game.ecs.systems.timer_system import TimerSystem
+from game.ecs.systems.weapon_system import WeaponSystem
 from game.sprites.sprite import Sprite
 from game.background import load_game_background, create_game_overlay
 from util.prepare import CLOCK, SURF
@@ -46,6 +47,7 @@ async def game() -> Screens:
 	bullet_system = BulletSystem()
 	death_system = DeathSystem()
 	timer_system = TimerSystem()
+	weapon_system = WeaponSystem()
 	render_system = RenderSystem()
 	
 	background = load_game_background()
@@ -60,16 +62,23 @@ async def game() -> Screens:
 			if event.type == pg.QUIT:
 				raise SystemExit
 			if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-				return Screens.MENU
+				return Screens.INGAMEMENU
 			# if event.type == pg.KEYDOWN and event.key == pg.K_i:
 			# 	return Screens.GAMEOVER
 			# if event.type == pg.KEYDOWN and event.key == pg.K_o:
 			# 	return Screens.LEVELCLEAR
+			
+			# Weapon switching
+			if event.type == pg.KEYDOWN and event.key == pg.K_TAB:
+				weapon_system.switch_weapon(1)
+			
+			# Start firing
 			if (event.type == pg.KEYDOWN and event.key == pg.K_f) or (event.type == pg.MOUSEBUTTONDOWN and event.button == 1):
-				print("hi")
-				player_pos = player.get_component(Position)
-				player_rotation = player.get_component(Rotation)
-				entities.add(shoot(player_pos, player_rotation, player.id)) # type: ignore
+				weapon_system.start_firing(weapon_system.get_current_weapon())
+			
+			# Stop firing
+			if (event.type == pg.KEYUP and event.key == pg.K_f) or (event.type == pg.MOUSEBUTTONUP and event.button == 1):
+				weapon_system.stop_firing(weapon_system.get_current_weapon())
 			# return Screens.INGAMEMENU
 
 		dash_system.update(entities, dt)
@@ -88,10 +97,17 @@ async def game() -> Screens:
 		
 		timer_remove = timer_system.update(entities, dt)
 		entities.difference_update(timer_remove)
+		
+		# Weapon firing system
+		current_weapon = weapon_system.get_current_weapon()
+		if weapon_system.shoot(current_weapon):
+			player_pos = player.get_component(Position)
+			player_rotation = player.get_component(Rotation)
+			entities.add(shoot(player_pos, player_rotation, player.id))
 
 		SURF.blit(background, (0, 0))
 		SURF.blit(overlay, (0, 0))
 
-		render_system.update(entities, player, level_system.level)
+		render_system.update(entities, player, level_system.level, weapon_system)
 
 		await update_screen()

@@ -17,14 +17,18 @@ class RenderSystem():
     death_animation_filename = "death_animation"
     self._death_sprites = (Sprite(death_animation_filename, "0"), Sprite(death_animation_filename, "1"), Sprite(
       death_animation_filename, "2"), Sprite(death_animation_filename, "3"), Sprite(death_animation_filename, "4"), Sprite(death_animation_filename, "5"))
-    self._bullet_sprite = pg.transform.scale_by(Sprite("weapons", "bullet").get(), 0.75)
-    self._gun_sprite = Sprite("weapons", "assault_rifle").get()
+    self._bullet_sprite = pg.transform.scale_by(Sprite("weapons", "bullet").get(), 0.35) # scale the bullet
+    self._gun_sprites = {
+      "ar": Sprite("weapons", "assault_rifle").get(),
+      "lmg": Sprite("weapons", "lmg").get(),
+      "revolver": Sprite("weapons", "revolver").get()
+    }
 
     self._maps = [pg.transform.scale_by(pg.image.load(f"game/resources/maps/map_{i}.png"), 4) for i in range(len(LEVELS))]
     # self._collision_mask = pg.transform.scale_by(pg.mask.from_surface(pg.image.load(
     #   "game/resources/collision_masks/collision_mask_0.png").convert_alpha()).to_surface(), 4)
 
-  def update(self, entities: set[Entity], player: Entity, level: int):
+  def update(self, entities: set[Entity], player: Entity, level: int, weapon_system=None):
     # draw player
 
     player_pos: Position = player.get_component(Position)  # type: ignore
@@ -37,10 +41,12 @@ class RenderSystem():
       if entity.has_component(Position):
         entity_pos: Position = entity.get_component(Position)  # type: ignore
         new_pos = (entity_pos.x + offset_x, entity_pos.y + offset_y)
-        # Draw gun attached to player (under the player for depth)
+        #gun tio plaer fx osffset latear change x falveu up
         if entity == player and entity.has_components(PersonSprite, Rotation):
           angle: float = entity.get_component(Rotation).angle  # type: ignore
-          gun_rotated = pg.transform.rotate(self._gun_sprite, -angle)
+          current_weapon_type = weapon_system.get_current_weapon().weapon_type if weapon_system else "ar"
+          gun_sprite = self._gun_sprites[current_weapon_type]
+          gun_rotated = pg.transform.rotate(gun_sprite, -angle)
           gun_offset_x = 20 * pg.math.Vector2(1, 0).rotate(angle).x
           gun_offset_y = 20 * pg.math.Vector2(1, 0).rotate(angle).y
           gun_pos = (new_pos[0] + gun_offset_x, new_pos[1] + gun_offset_y + 16)
