@@ -4,6 +4,7 @@ from game.ecs.components.enemy import Enemy
 from game.ecs.components.physics import Position
 from game.ecs.entity import Entity
 from game.ecs.entitytypes.enemy import enemy
+from game.resources.levels import LEVELS
 
 
 class LevelSystem:
@@ -41,10 +42,6 @@ class LevelSystem:
 	
 	def get_total_time(self) -> float:
 		return time.time() - self.start_time
-	
-	def next_level(self):
-		self.level += 1
-		self.level_start_time = time.time()
 		
 	def get_enemies(self) -> set:
 		enemies = set()
@@ -62,6 +59,7 @@ class LevelSystem:
 	def next_level(self):
 		self.level += 1
 		self.enemies_remaining = len(LEVELS[self.level].enemies)
+		self.level_start_time = time.time()
 	
 	def get_level_spawn(self):
 		return Position(*LEVELS[self.level].spawn_pos)
