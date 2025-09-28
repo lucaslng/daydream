@@ -62,9 +62,10 @@ class RenderSystem():
           current_weapon_type = weapon_system.get_current_weapon().weapon_type if weapon_system else "ar"
           gun_sprite = self._gun_sprites[current_weapon_type]
           gun_rotated = pg.transform.rotate(gun_sprite, -angle)
-          gun_offset_x = 25 * pg.math.Vector2(1, 0).rotate(angle).x + 12 * pg.math.Vector2(0, 1).rotate(angle).x
-          gun_offset_y = 25 * pg.math.Vector2(1, 0).rotate(angle).y + 12 * pg.math.Vector2(0, 1).rotate(angle).y
-          gun_pos = (new_pos[0] + gun_offset_x, new_pos[1] + gun_offset_y + 16)
+          forward_offset = pg.math.Vector2(64, 0).rotate(angle)
+          right_offset = pg.math.Vector2(0, -64).rotate(angle)  # Negative Y for "right" in screen coordinates
+          gun_offset = forward_offset + right_offset
+          gun_pos = (new_pos[0] + gun_offset.x, new_pos[1] + gun_offset.y)
           SURF.blit(gun_rotated, gun_rotated.get_rect(center=gun_pos))
         
         if entity.has_components(PersonSprite, Rotation):
