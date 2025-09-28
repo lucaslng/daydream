@@ -21,6 +21,8 @@ class DeathSystem():
 				if death.death:
 					death.frame += 1
 					if death.frame >= 11:
+						death.death = False
+						death.frame = 0
 						remove.add(entity)
 				else:
 					death.death = True
