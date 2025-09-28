@@ -21,6 +21,7 @@ from game.ecs.systems.input import InputSystem
 from game.ecs.systems.level_system import LevelSystem
 from game.ecs.systems.movement import MovementSystem
 from game.ecs.systems.render import RenderSystem
+from game.ecs.systems.timer_system import TimerSystem
 from game.sprites.sprite import Sprite
 from game.background import load_game_background, create_game_overlay
 from util.prepare import CLOCK, SURF
@@ -44,6 +45,7 @@ async def game() -> Screens:
 	dash_system = DashSystem()
 	bullet_system = BulletSystem()
 	death_system = DeathSystem()
+	timer_system = TimerSystem()
 	render_system = RenderSystem()
 	
 	background = load_game_background()
@@ -83,6 +85,9 @@ async def game() -> Screens:
 		
 		remove = death_system.update()
 		entities.difference_update(remove)
+		
+		timer_remove = timer_system.update(entities, dt)
+		entities.difference_update(timer_remove)
 
 		SURF.blit(background, (0, 0))
 		SURF.blit(overlay, (0, 0))

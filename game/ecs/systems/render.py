@@ -18,6 +18,7 @@ class RenderSystem():
     self._death_sprites = (Sprite(death_animation_filename, "0"), Sprite(death_animation_filename, "1"), Sprite(
       death_animation_filename, "2"), Sprite(death_animation_filename, "3"), Sprite(death_animation_filename, "4"), Sprite(death_animation_filename, "5"))
     self._bullet_sprite = pg.transform.scale_by(Sprite("weapons", "bullet").get(), 0.75)
+    self._gun_sprite = Sprite("weapons", "assault_rifle").get()
 
     self._maps = [pg.transform.scale_by(pg.image.load(f"game/resources/maps/map_{i}.png"), 4) for i in range(len(LEVELS))]
 
@@ -34,6 +35,15 @@ class RenderSystem():
       if entity.has_component(Position):
         entity_pos: Position = entity.get_component(Position)  # type: ignore
         new_pos = (entity_pos.x + offset_x, entity_pos.y + offset_y)
+        # Draw gun attached to player (under the player for depth)
+        if entity == player and entity.has_components(PersonSprite, Rotation):
+          angle: float = entity.get_component(Rotation).angle  # type: ignore
+          gun_rotated = pg.transform.rotate(self._gun_sprite, -angle)
+          gun_offset_x = 20 * pg.math.Vector2(1, 0).rotate(angle).x
+          gun_offset_y = 20 * pg.math.Vector2(1, 0).rotate(angle).y
+          gun_pos = (new_pos[0] + gun_offset_x, new_pos[1] + gun_offset_y + 16)
+          SURF.blit(gun_rotated, gun_rotated.get_rect(center=gun_pos))
+        
         if entity.has_components(PersonSprite, Rotation):
           angle: float = entity.get_component(Rotation).angle  # type: ignore
           person_sprite: PersonSprite = entity.get_component(
@@ -42,6 +52,7 @@ class RenderSystem():
           rotated = pg.transform.rotate(
             sprite_surface, -angle)  # type: ignore
           SURF.blit(rotated, rotated.get_rect(center=new_pos))
+          
           if entity.has_component(Death) and entity.get_component(Death).death: # type: ignore
             frame = entity.get_component(Death).frame // 2 # type: ignore
             death_sprite = self._death_sprites[frame].get()
