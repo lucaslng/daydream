@@ -2,6 +2,7 @@ import pygame as pg
 
 from game.ecs.components.dash import Dash
 from game.ecs.components.death import Death
+from game.ecs.components.death import Death
 from game.ecs.components.enemy import Enemy
 from game.ecs.entity import Entity
 from game.ecs.components.collider import Collider
@@ -14,6 +15,8 @@ from game.ecs.systems.bullets import BulletSystem
 from game.ecs.systems.bullet_collision import BulletCollisionSystem
 from game.ecs.systems.dash import DashSystem
 from game.ecs.systems.deaths import DeathSystem
+from game.ecs.systems.enemy_ai_system import EnemyAISystem
+from game.config.enemy_ai_config import ENEMY_SHOOT_COOLDOWN, ENEMY_SHOOT_RANGE
 from game.ecs.systems.input import InputSystem
 from game.ecs.systems.level_system import LevelSystem
 from game.ecs.systems.hud_system import HUDSystem
@@ -43,6 +46,8 @@ async def game(level_system=None) -> tuple[Screens, object] | Screens:
 	bullet_system = BulletSystem()
 	bullet_collision_system = BulletCollisionSystem()
 	death_system = DeathSystem()
+	enemy_ai_system = EnemyAISystem()
+	enemy_ai_system.configure(cooldown=ENEMY_SHOOT_COOLDOWN, range=ENEMY_SHOOT_RANGE)
 	timer_system = TimerSystem()
 	weapon_system = WeaponSystem()
 	upgrade_system = UpgradeSystem()
@@ -64,10 +69,6 @@ async def game(level_system=None) -> tuple[Screens, object] | Screens:
 				raise SystemExit
 			if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
 				return Screens.INGAMEMENU, hud_system
-			# if event.type == pg.KEYDOWN and event.key == pg.K_i:
-			# 	return Screens.GAMEOVER
-			# if event.type == pg.KEYDOWN and event.key == pg.K_o:
-			# 	return Screens.LEVELCLEAR
 			
 			if event.type == pg.KEYDOWN and event.key == pg.K_TAB:
 				weapon_system.switch_weapon(1)
@@ -81,20 +82,29 @@ async def game(level_system=None) -> tuple[Screens, object] | Screens:
 		dash_system.update(entities, dt)
 		input_system.update(player)
 		movement_system.update(entities, dt, level_system.level)
+		enemy_ai_system.update(entities, player)
 
 		wall_collision_bullets = bullet_collision_system.update(entities, level_system.level)
 		entities.difference_update(wall_collision_bullets)
 		
 		new_deaths = bullet_system.update(entities, level_system.level)
 		if player in new_deaths:
-			player.get_component(PlayerComponent).is_alive = False
+			if not player.has_component(Death):
+				player.add_component(Death())
+			player.get_component(Death).death = True
+			player_pos = player.get_component(Position)
+			player_pos.x, player_pos.y = level_system.get_level_spawn().x, level_system.get_level_spawn().y
+			death_system.reset_entity_death(player)
 		
-		# Remove bullets and dead entities immediately
-		entities.difference_update(new_deaths)
+		entities_to_remove = new_deaths - {player}
+		entities.difference_update(entities_to_remove)
 		upgrade_system.update(player)
-		death_system.deaths.update(new_deaths)
+		death_system.deaths.update(entities_to_remove)
+		if player in new_deaths:
+			death_system.deaths.add(player)
 		
 		remove = death_system.update()
+		remove.discard(player)
 		entities.difference_update(remove)
 		render_system.blood_positions.update(map(lambda d: d.get_component(Position), filter(lambda e: e.has_component(Enemy), remove)))
 		
@@ -115,7 +125,7 @@ async def game(level_system=None) -> tuple[Screens, object] | Screens:
 		if weapon_system.shoot(current_weapon):
 			player_pos = player.get_component(Position)
 			player_rotation = player.get_component(Rotation)
-			entities.add(shoot(player_pos, player_rotation, player.id)) # type: ignore
+			entities.add(shoot(player_pos, player_rotation, player.id))
 
 		SURF.blit(background, (0, 0))
 		SURF.blit(overlay, (0, 0))

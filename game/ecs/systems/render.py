@@ -68,16 +68,16 @@ class RenderSystem():
           SURF.blit(gun_rotated, gun_rotated.get_rect(center=gun_pos))
         
         if entity.has_components(PersonSprite, Rotation):
-          angle: float = entity.get_component(Rotation).angle  # type: ignore
+          angle: float = entity.get_component(Rotation).angle
           person_sprite: PersonSprite = entity.get_component(
-            PersonSprite)  # type: ignore
-          sprite_surface = person_sprite.body_sprite.get() # type: ignore
+            PersonSprite)
+          sprite_surface = person_sprite.body_sprite.get()
           rotated = pg.transform.rotate(
-            sprite_surface, -angle)  # type: ignore
+            sprite_surface, -angle)
           SURF.blit(rotated, rotated.get_rect(center=new_pos))
         
-        if entity.has_component(Death) and entity.get_component(Death).death: # type: ignore
-          frame = entity.get_component(Death).frame // 2 # type: ignore
+        if entity.has_component(Death) and entity.get_component(Death).death:
+          frame = entity.get_component(Death).frame // 2
           if frame < 6:
             death_sprite = self._death_sprites[frame].get()
             SURF.blit(death_sprite, death_sprite.get_rect(center=new_pos))

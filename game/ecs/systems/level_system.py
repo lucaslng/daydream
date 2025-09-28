@@ -9,7 +9,7 @@ from game.resources.levels import LEVELS
 
 class LevelSystem:
 	def __init__(self):
-		self.level = 2
+		self.level = 1
 		self.enemies_remaining = len(LEVELS[self.level].enemies)
 		self.start_time = time.time()
 		self.level_start_time = time.time()
@@ -58,7 +58,8 @@ class LevelSystem:
 				self.enemies_remaining += 1
 	
 	def complete_level(self):
-		self.level_times[self.level] = self.get_level_time()
+		if self.level >= 1 and self.level <= 3:
+			self.level_times[self.level - 1] = self.get_level_time()
 		self.is_level_complete = True
 	
 	def next_level(self):
@@ -71,7 +72,7 @@ class LevelSystem:
 			self.is_level_complete = True
 	
 	def is_game_complete(self) -> bool:
-		return self.level >= len(LEVELS)
+		return self.level > 3
 	
 	def get_total_time(self) -> float:
 		return sum(self.level_times)

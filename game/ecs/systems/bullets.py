@@ -21,29 +21,25 @@ class BulletSystem():
 		deaths: set[Entity] = set()
 		bullets_to_remove: set[Entity] = set()
 		
-		# Check bullet collision with walls first
 		for bullet in entities:
 			if bullet.has_components(Bullet, Collider, Position):
 				bullet_collider: Collider = bullet.get_component(Collider)
 				bullet_pos: Position = bullet.get_component(Position)
 				
-				# Check if bullet hits wall - bullets despawn on wall collision
 				if self._collision_masks[level].overlap(pg.Mask((bullet_collider.width, bullet_collider.height), True), 
 													   (bullet_pos.x - bullet_collider.width//2, bullet_pos.y - bullet_collider.height//2)):
 					bullets_to_remove.add(bullet)
 		
-		# Check bullet collision with entities (players/NPCs)
 		for entity in entities:
 			if entity.has_components(PersonSprite, Collider, Position):
-				# Check if entity is already dead
 				if entity.has_component(Death) and entity.get_component(Death).death:
 					continue
 				for bullet in entities:
 					if bullet.has_components(Bullet, Collider, Position) and bullet.get_component(Bullet).shooter_id != entity.id:
-						entity_collider: Collider = entity.get_component(Collider) # type: ignore
-						entity_pos: Position = entity.get_component(Position) # type: ignore
-						bullet_collider: Collider = bullet.get_component(Collider) # type: ignore
-						bullet_pos: Position = bullet.get_component(Position) # type: ignore
+						entity_collider: Collider = entity.get_component(Collider)
+						entity_pos: Position = entity.get_component(Position)
+						bullet_collider: Collider = bullet.get_component(Collider)
+						bullet_pos: Position = bullet.get_component(Position)
 						entity_rect = Rect()
 						entity_rect.center = entity_pos.x, entity_pos.y
 						entity_rect.size = entity_collider.width, entity_collider.height
